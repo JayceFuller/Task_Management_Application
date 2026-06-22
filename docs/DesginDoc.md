@@ -4,7 +4,7 @@ geometry: margin=1in
 
 # Task Management App Design Documentation
 
-## Designed and Programmed by: 
+#### Designed and Programmed by: 
 Jayce Fuller
 
 ## Executive Summary
@@ -14,7 +14,7 @@ This application allows for users to manage their own personal list of tasks and
 To create a local, desktop app that provides similar and enhanced features to that of calendar apps. For those who want to distance from larger company calendar apps but still want to manage tasks and events digitially, this app aides in that purpose.
 
 ## MVP Features
-Tasks
+#### Tasks
  - Create a new task
  - Edit an existing task
  - Mark a task as completed
@@ -23,7 +23,7 @@ Tasks
  - View tasks by date
  - View tasks by subject
 
-Events
+#### Events
  - Create a new event
  - Edit an existing event
  - View events by date
@@ -31,12 +31,12 @@ Events
  - Sort events by user-made calendar labels
  - Set events to reoccur annually
 
-Subjects and Labels
+#### Subjects and Labels
  - Create task subjects and event labels
  - Delete task subjects and event labels
  - Use for filtering of tasks and events
 
-Misc
+#### Misc
  - Open app to the current date
  - View the current date in app
  - Search by date to look at events and tasks set in advance for planning
