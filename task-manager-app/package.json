@@ -12,5 +12,8 @@
   "type": "commonjs",
   "devDependencies": {
     "electron": "^42.4.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
   }
 }
