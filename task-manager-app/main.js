@@ -14,7 +14,7 @@ function createWindow() {
     }
   });
 
-  win.loadFile("task-manager-ui/index.html");
+  win.loadFile("task-manager-ui/week-view.html");
 
 //   win.webContents.openDevTools();
 }

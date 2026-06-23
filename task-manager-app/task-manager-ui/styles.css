@@ -12,18 +12,17 @@ select {
 
 /** Styles the body of the app */
 body {
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
-  background: white;
-  user-select: none;
-  -webkit-app-region: drag;
+    margin: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: #13292D;
+    user-select: none;
+    -webkit-app-region: drag;
 }
 
 /** Styles the general content container of the app */
 .app {
-    padding: 25px;
-    background-color: teal;
+    margin: 15px;
 }
 
 /** Styles a bordered container */
@@ -31,13 +30,22 @@ body {
     border-style: solid;
     border-color: white;
     border-width: 2px;
-    padding: 10px;
+    padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
+/** Styles the navigation at the top */
+.nav {
+    background-color: #119F9D;
+    color: white;
+    font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+}
+
 /** Styles the horizontal line */
 hr {
+    margin-top: 3px;
+    margin-bottom: 3px;
     color: white;
     opacity: 100%;
     border-width: 2px;
@@ -46,15 +54,27 @@ hr {
 /** Styles heading 2 */
 h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 24px;
     color: white;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+    font-weight: bold;
 }
 
 /** Styles heading 3 */
 h3 {
     margin: 0;
-    font-size: 14px;
+    margin-left: 10px;
+    font-size: 20px;
     color: white;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+    font-weight: bold;
+}
+
+/** Styles the navigation buttons */
+.nav-button {
+    background: #117473;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
 }
