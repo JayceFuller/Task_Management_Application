@@ -23,9 +23,38 @@ body {
 /** Styles the general content container of the app */
 .app {
     padding: 25px;
+    background-color: teal;
 }
 
+/** Styles a bordered container */
+.border-container {
+    border-style: solid;
+    border-color: white;
+    border-width: 2px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/** Styles the horizontal line */
+hr {
+    color: white;
+    opacity: 100%;
+    border-width: 2px;
+}
+
+/** Styles heading 2 */
 h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 20px;
+    color: white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/** Styles heading 3 */
+h3 {
+    margin: 0;
+    font-size: 14px;
+    color: white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }

@@ -15,6 +15,8 @@ function createWindow() {
   });
 
   win.loadFile("task-manager-ui/index.html");
+
+//   win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
