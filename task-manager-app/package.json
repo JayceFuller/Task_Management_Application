@@ -15,7 +15,7 @@
     "electron": "^42.4.1"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8",
+    "better-sqlite3": "^12.11.1",
     "electron-store": "^11.0.2"
   }
 }
