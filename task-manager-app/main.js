@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
 const { join, dirname } = require("path");
 const { getWindowSettings, saveBounds } = require("./user-settings");
 
@@ -9,13 +9,14 @@ const storage = app.getPath("userData");
  */
 function createWindow() {
     const bounds = getWindowSettings();
+    Menu.setApplicationMenu(null);
+    
     const window = new BrowserWindow({
         width: bounds[0],
         height: bounds[1],
         resizable: true,
         maximizable: false,
-        fullscreenable: false,
-        frame: false, 
+        fullscreenable: false, 
         transparent: false,
         webPreferences: {
             preload: join(__dirname, "./preload.js"),
@@ -23,7 +24,7 @@ function createWindow() {
         }
     });
 
-    window.loadFile("./task-manager-ui/index.html");
+    window.loadFile("./task-manager-ui/home.html");
     window.on("resized", () => saveBounds(window.getSize()));
 }
 
