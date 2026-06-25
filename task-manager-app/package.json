@@ -2,8 +2,9 @@
   "name": "task-manager-app",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "./main.js",
   "scripts": {
+    "dev": "npm run build && electron .",
     "start": "electron ."
   },
   "keywords": [],
@@ -14,6 +15,7 @@
     "electron": "^42.4.1"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8"
+    "bootstrap": "^5.3.8",
+    "electron-store": "^11.0.2"
   }
 }
