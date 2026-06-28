@@ -11,7 +11,7 @@ function getDateDisplay() {
     const year = date.getFullYear();
     const weekday = weekdayNames[date.getDay()];
 
-    document.getElementById('calendar').textContent = weekday + " " + month + " " + day + ", " + year;
+    document.getElementById('date').textContent = weekday + " " + month + " " + day + ", " + year;
 }
 
 getDateDisplay();

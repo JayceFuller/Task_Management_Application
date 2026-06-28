@@ -1,7 +1,7 @@
-const { contextBridge } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
 const API = {
-    //add database gathering info here
+    getTodaysTasks: () => ipcRenderer.invoke('getTodaysTasks')
 }
 
 contextBridge.exposeInMainWorld("api", API);

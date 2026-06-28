@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Personal Task Manager - Current Date View</title>
+    <title>Personal Task Manager - Today's Tasks</title>
     <link rel="stylesheet" href="styles.css" />
+    <line rel="stylesheet" href="themes.css" />
 </head>
 
   <header>
@@ -17,7 +18,7 @@
   <body>
     <div class="app">
         <div>
-            <h2 id="calendar"></h2>
+            <h2 id="date"></h2>
         </div>
         <hr />
 
@@ -27,9 +28,28 @@
 
         <div class="border-container">
             <h3>Tasks</h3>
+            <ul id="task-list"></ul>
+            <script>
+                async function loadTasks() {
+                    try {
+                        const tasks = await window.api.getTasks();
+                        const taskEl = document.getElementById('task-list');
+                        taskEl.innerHTML = '';
+                        tasks.foreach(task => {
+                            const taskItem = document.createElement('li');
+                            taskItem.innerHTML = `${task.name}`;
+                            taskItem.appendChild(taskEl);
+                        })
+                    }
+                    catch (err) {
+                        console.error(`Error loading today's tasks`);
+                    }
+                }
+                loadTasks();
+            </script>
         </div>
     </div>
   </body>
 
-  <script src="js/script.js"></script>
+  <script src="js/home.js"></script>
 </html>

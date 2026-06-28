@@ -1,3 +1,9 @@
+/** Default styling */
+:root {
+    --app-background: black;
+    --text-color: white;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -15,7 +21,9 @@ body {
     margin: 0px;
     width: 100vw;
     height: 100vh;
-    background: #13292D;
+    background-color: var(--app-background);
+    color: var(--text-color);
+    transition: background-color 0.3s ease;
     user-select: none;
     -webkit-app-region: drag;
 }
