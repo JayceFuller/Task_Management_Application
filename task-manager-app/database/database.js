@@ -4,7 +4,7 @@ const Database = require('better-sqlite3');
 //Create the database connection
 let db;
 try {
-    const db = new Database(join(__dirname, "calendar.db"));
+    const db = new Database(join(__dirname, "database.db"));
     console.log("Database connected");
 }
 catch (err) {
