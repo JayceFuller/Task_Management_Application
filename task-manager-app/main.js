@@ -1,14 +1,14 @@
 const { app, BrowserWindow, Menu } = require("electron");
 const { join, dirname } = require("path");
-const { getWindowSettings, saveBounds } = require("./user-settings");
+const { getWindowSettings, saveBounds } = require("./task-manager-api/user-settings");
+const db = require('./data/database');
 
-const storage = app.getPath("userData");
+const isMac = process.platform !== "darwin";
 
-/**
- * Creates the window of the app
- */
+// Create the window of the app
 function createWindow() {
     const bounds = getWindowSettings();
+    const mainMenu = Menu.buildFromTemplate(menu);
     Menu.setApplicationMenu(null);
     
     const window = new BrowserWindow({
@@ -31,5 +31,15 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (isMac) app.quit();
 });
+
+//Create menu template
+const menu = [
+    {
+        label: 'File',
+        submenu: [
+            { role: 'quit' }
+        ]
+    },
+];

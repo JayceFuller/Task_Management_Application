@@ -31,9 +31,9 @@ To create a local, desktop app that provides similar and enhanced features to th
  - Sort events by user-made calendar labels
  - Set events to reoccur annually
 
-#### Subjects and Labels
- - Create task subjects and event labels
- - Delete task subjects and event labels
+#### Labels
+ - Create labels for tasks and events
+ - Delete labels for tasks and events
  - Use for filtering of tasks and events
 
 #### Misc
