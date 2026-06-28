@@ -1,21 +1,22 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
 const { join, dirname } = require("path");
-const { getWindowSettings, saveBounds } = require("./user-settings");
+const { getWindowSettings, saveBounds } = require("./task-manager-api/user-settings");
+const db = require('./data/database');
 
-const storage = app.getPath("userData");
+const isMac = process.platform !== "darwin";
 
-/**
- * Creates the window of the app
- */
+// Create the window of the app
 function createWindow() {
     const bounds = getWindowSettings();
+    const mainMenu = Menu.buildFromTemplate(menu);
+    Menu.setApplicationMenu(null);
+    
     const window = new BrowserWindow({
         width: bounds[0],
         height: bounds[1],
         resizable: true,
         maximizable: false,
-        fullscreenable: false,
-        frame: false, 
+        fullscreenable: false, 
         transparent: false,
         webPreferences: {
             preload: join(__dirname, "./preload.js"),
@@ -23,12 +24,22 @@ function createWindow() {
         }
     });
 
-    window.loadFile("./task-manager-ui/index.html");
+    window.loadFile("./task-manager-ui/home.html");
     window.on("resized", () => saveBounds(window.getSize()));
 }
 
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (isMac) app.quit();
 });
+
+//Create menu template
+const menu = [
+    {
+        label: 'File',
+        submenu: [
+            { role: 'quit' }
+        ]
+    },
+];
