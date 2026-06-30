@@ -14,8 +14,6 @@ function getDateDisplay() {
     document.getElementById('date').textContent = weekday + " " + month + " " + day + ", " + year;
 }
 
-getDateDisplay();
-
 /** Opens the week view page */
 function openWeekView() {
     window.location.href = "week-view.html";

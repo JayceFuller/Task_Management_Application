@@ -43,14 +43,6 @@ body {
     margin-bottom: 10px;
 }
 
-/** Styles the navigation at the top */
-.nav {
-    background-color: #119F9D;
-    color: white;
-    font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
-    gap: 10px;
-}
-
 /** Styles the horizontal line */
 hr {
     margin-top: 3px;

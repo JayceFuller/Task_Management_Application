@@ -7,20 +7,9 @@ const taskDA = require('./task-manager-api/persistence/taskDA.js');
 const eventDA = require('./task-manager-api/persistence/eventDA.js');
 const labelDA = require('./task-manager-api/persistence/labelDA.js');
 
-//Create menu template
-const menu = [
-    {
-        label: 'File',
-        submenu: [
-            { role: 'quit' }
-        ]
-    },
-];
-
 // Create the window of the app
 function createWindow() {
     const bounds = getWindowSettings();
-    const mainMenu = Menu.buildFromTemplate(menu);
     Menu.setApplicationMenu(null);
     
     const window = new BrowserWindow({

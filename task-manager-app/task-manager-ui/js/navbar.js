@@ -1,11 +1,13 @@
-class Navbar extends HTMLElement {
-    connectedCallback() {
-        this.innerHtml = `
-            <nav role="navigation" class="nav">
-                <button class="nav-button">Search</button>
-                <button class="nav-button">Day View</button>
-                <button class="nav-button">+ Add</button>
-            </nav>
-        `;
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("./shared/nav.html")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Navbar file not found");
+      }
+      return response.text();
+    })
+    .then(data => {
+      document.getElementById("navbar").innerHTML = data;
+    })
+    .catch(error => console.error("Error loading navbar:", error));
+});

@@ -1,0 +1,48 @@
+/** Private CSS styles for the navigation bar */
+.nav {
+    display: flex;
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    -webkit-app-region: no-drag;
+    background-color: #119F9D;
+    color: white;
+    gap: 20px;
+}
+
+.nav-item {
+    padding: 5px 10px;
+    line-height: 32px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+}
+
+a:hover {
+    background-color: blue;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #119F9D;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    list-style: none;
+    padding: 5px;
+    min-width: 100px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}

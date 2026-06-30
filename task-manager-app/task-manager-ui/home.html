@@ -1,55 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Personal Task Manager - Today's Tasks</title>
-    <link rel="stylesheet" href="styles.css" />
-    <line rel="stylesheet" href="themes.css" />
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <title>Personal Task Manager - Today's Tasks</title>
+        <link rel="stylesheet" href="./css/styles.css" />
+        <line rel="stylesheet" href="./css/themes.css" />
+        <script src="./js/home.js"></script>
+        <script src="./js/navbar.js"></script>
+    </head>
 
-  <header>
-    <div class="nav center-content">
-        <button class="nav-button">Search</button>
-        <button class="nav-button" onclick="openWeekView()">Swap View</button>
-        <button class="nav-button">+ Add</button>
-    </div>
-  </header>
+    <header>
+        <div id="navbar"></div>
+    </header>
 
-  <body>
-    <div class="app">
-        <div>
-            <h2 id="date"></h2>
-        </div>
-        <hr />
+    <body>
+        <div class="app">
+            <div>
+                <h2 id="date"></h2>
+                <script>getDateDisplay();</script>
+            </div>
+            <hr />
 
-        <div class="border-container">
-            <h3>Events</h3>
-        </div>
-
-        <div class="border-container">
-            <h3>Tasks</h3>
-            <ul id="task-list"></ul>
-            <script>
-                async function loadTasks() {
-                    try {
-                        const tasks = await window.api.getTasks();
-                        const taskEl = document.getElementById('task-list');
-                        taskEl.innerHTML = '';
-                        tasks.foreach(task => {
-                            const taskItem = document.createElement('li');
-                            taskItem.innerHTML = `${task.name}`;
-                            taskItem.appendChild(taskEl);
-                        })
+            <div class="border-container">
+                <h3>Events</h3>
+                <ul id="event-list"></ul>
+                <script>
+                    async function loadEvents() {
+                        try {
+                            const events = await window.api.getTodaysEvents();
+                            const eventEl = document.getElementById('event-list');
+                            eventEl.innerHTML = '';
+                            events.foreach(event => {
+                                const eventItem = document.createElement('li');
+                                eventItem.innerHTML = `${event.name}`;
+                                eventItem.appendChild(eventEl);
+                            })
+                        }
+                        catch (err) {
+                            console.error(`Error loading today's events`);
+                        }
                     }
-                    catch (err) {
-                        console.error(`Error loading today's tasks`);
-                    }
-                }
-                loadTasks();
-            </script>
-        </div>
-    </div>
-  </body>
+                    loadEvents();
+                </script>
+            </div>
 
-  <script src="js/home.js"></script>
+            <div class="border-container">
+                <h3>Tasks</h3>
+                <ul id="task-list"></ul>
+                <script>
+                    async function loadTasks() {
+                        try {
+                            const tasks = await window.api.getTodaysTasks();
+                            const taskEl = document.getElementById('task-list');
+                            taskEl.innerHTML = '';
+                            tasks.foreach(task => {
+                                const taskItem = document.createElement('li');
+                                taskItem.innerHTML = `${task.name}`;
+                                taskItem.appendChild(taskEl);
+                            })
+                        }
+                        catch (err) {
+                            console.error(`Error loading today's tasks`);
+                        }
+                    }
+                    loadTasks();
+                </script>
+            </div>
+        </div>
+    </body>
 </html>
