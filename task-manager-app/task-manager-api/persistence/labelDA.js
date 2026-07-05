@@ -4,18 +4,14 @@ const dbPath = path.join(__dirname, '../../data/database.db');
 
 /**
  * Get all labels from the database
+ * 
+ * @return array of labels, may be empty
  */
 function getLabels() {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`SELECT * FROM Label`).all();
-    }
-    catch (err) {
-        console.log(`Error getting task labels`)
-    }
-    finally {
-        db.close();
-    }
+    const labels = db.prepare(`SELECT * FROM Label`).all();
+    db.close();
+    return labels;
 }
 
 /**

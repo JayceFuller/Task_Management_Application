@@ -1,3 +1,9 @@
+const err = document.getElementById('err');
+const taskForm = document.getElementById('taskForm')
+
+/**
+ * Load all tasks from the database and display in groupings by saved labels
+ */
 async function loadTasks() {
     try {
         const labels = await window.electronAPI.getLabels();
@@ -22,28 +28,42 @@ async function loadTasks() {
         }))
     }
     catch (err) {
-        console.log("Failed to load tasks by label");
+        console.log("Failed to load tasks");
     }
 }
 
-function openTaskForm() {
-    document.getElementById("taskForm").style.display = "block";
+/** Open task creation dialog */
+function openTaskDialog() {
+    document.getElementById("taskDialog").style.display = "block";
 }
 
-function closeTaskForm() {
-    document.getElementById("taskForm").style.display = "none";
+/** Close task creation dialog */
+function closeTaskDialog() {
+    document.getElementById("taskDialog").style.display = "none";
 }
 
-document.getElementById('taskForm').addEventListener('submit', (event) => {
+/** Handle taskForm submission */
+taskForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+    const formData = new FormData(taskForm)
+    const taskInfo = {
+        name: formData.get('name'),
+        details: formData.get('details'),
+        due: formData.get('due'),
+        recurrence: formData.get('recurrence'),
+        level: formData.get('level'),
+        list: formData.get('list')
+    }
 
-    const name = document.getElementById('name').value;
-    const details = document.getElementById('details').value;
-    const due = document.getElementById('due').value;
-    const recurrence = document.getElementById('recurrence').value;
-    const level = document.getElementById('level').value;
-    const list = document.getElementById('list').value;
-
-    const data = { name, details, due, list, level, list };
-    window.API.createTask();
+    const isSuccess = await window.electronAPI.createTask(taskInfo);
+    if (isSuccess) {
+        err.style.display = 'none';
+        taskForm.reset();
+        closeTaskDialog();
+        loadTasks();
+    }
+    else {
+        err.textContent = 'Save failed, please check inputs for errors and try again';
+        err.style.display = 'block';
+    }
 })

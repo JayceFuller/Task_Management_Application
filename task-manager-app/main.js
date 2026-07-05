@@ -2,7 +2,6 @@ const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const { join, dirname } = require("path");
 const isMac = process.platform !== "darwin";
 const { getWindowSettings, saveBounds } = require("./task-manager-api/user-settings");
-const db = require('./data/database');
 const taskDA = require('./task-manager-api/persistence/taskDA.js');
 const eventDA = require('./task-manager-api/persistence/eventDA.js');
 const labelDA = require('./task-manager-api/persistence/labelDA.js');
@@ -21,43 +20,70 @@ function createWindow() {
         transparent: false,
         icon: join(__dirname, "./assets/AppIcon.ico"),
         webPreferences: {
-            preload: join(__dirname, "./preload.js"),
-            contextIsolation: true
+            preload: join(__dirname, "./task-manager-api/preload.js"),
+            contextIsolation: true,
+            nodeIntegration: false
         }
     });
 
-    // window.webContents.openDevTools();
+    window.webContents.openDevTools();
     window.loadFile("./task-manager-ui/home.html");
     window.on("resized", () => saveBounds(window.getSize()));
 }
 
 // Handle all label operations
 ipcMain.handle('getLabels', () => {
-    return labelDA.getLabels();
-})
+    try {
+        const labels = labelDA.getLabels();
+        return { succes: true, data: labels };
+    }
+    catch (err) {
+        console.log('Error in labelDA.getLabels(): ', err);
+        return { success: false };
+    }
+});
 
 // Handle all task operations
 ipcMain.handle('getTodaysTasks', () => {
-    return taskDA.getTodaysTasks();
+    return new Promise((resolve, reject) => {
+        taskDA.getTodaysTasks();
+    });
 })
 ipcMain.handle('getSevenDayTasks', () => {
     return taskDA.getSevenDayTasks();
 })
-ipcMain.on('createTask', (event, formData) => {
-    taskDA.createTask(formData);
-})
+ipcMain.handle('createTask', async (event, formData) => {
+    try {
+        const rows = taskDA.createTask(formData);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in taskDA.createTask(): ', err);
+        return { success: false };
+    }
+});
 ipcMain.handle('deleteTask', () => {
     return taskDA.deleteTask();
 })
 ipcMain.handle('getTaskByList', (event, label) => {
-    return new Promise((resolve, reject) => {
-        taskDA.getTaskByList(label);
-    });
+    try {
+        const tasks = taskDA.getTaskByList(label);
+        return { success: true, data: tasks };
+    }
+    catch (err) {
+        console.log('Error in taskDA.getTaskByLabel(): ', err);
+        return { success: false };
+    }
 })
 
 // Handle all event operations
 ipcMain.handle('getTodaysEvents', () => {
-    return eventDA.getTodaysEvents();
+    return new Promise((resolve, reject) => {
+        eventDA.getTodaysEvents();
+    });
 })
 ipcMain.handle('getSevenDayEvents', () => {
     return eventDA.getSevenDayEvents();
