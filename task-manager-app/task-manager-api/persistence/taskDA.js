@@ -86,9 +86,25 @@ function deleteTask() {
     }
 }
 
+function getTaskByList(label) {
+    const db = new Database(dbPath);
+    try {
+        const sql = db.prepare(`SELECT * FROM Task WHERE LabelId = ?`);
+        const rows = sql.run(label);
+        return rows;
+    }
+    catch (err) {
+        console.log(`Error getting tasks by label`)
+    }
+    finally {
+        db.close();
+    }
+}
+
 module.exports = {
     getTodaysTasks,
     getSevenDayTasks,
     createTask,
-    deleteTask
+    deleteTask,
+    getTaskByList
 }

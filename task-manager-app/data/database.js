@@ -5,10 +5,10 @@ const Database = require('better-sqlite3');
 let db;
 try {
     const db = new Database(join(__dirname, "database.db"));
-    console.log("Database connected");
+    console.log("Success: Task management database connected");
 }
 catch (err) {
-    console.log("Database connection failed", err);
+    console.log("Error: Task management database connection failed", err);
 }
 
 module.exports = db;

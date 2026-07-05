@@ -26,9 +26,15 @@ function createWindow() {
         }
     });
 
+    // window.webContents.openDevTools();
     window.loadFile("./task-manager-ui/home.html");
     window.on("resized", () => saveBounds(window.getSize()));
 }
+
+// Handle all label operations
+ipcMain.handle('getLabels', () => {
+    return labelDA.getLabels();
+})
 
 // Handle all task operations
 ipcMain.handle('getTodaysTasks', () => {
@@ -42,6 +48,11 @@ ipcMain.on('createTask', (event, formData) => {
 })
 ipcMain.handle('deleteTask', () => {
     return taskDA.deleteTask();
+})
+ipcMain.handle('getTaskByList', (event, label) => {
+    return new Promise((resolve, reject) => {
+        taskDA.getTaskByList(label);
+    });
 })
 
 // Handle all event operations

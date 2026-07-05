@@ -3,6 +3,22 @@ const path = require('path');
 const dbPath = path.join(__dirname, '../../data/database.db');
 
 /**
+ * Get all labels from the database
+ */
+function getLabels() {
+    const db = new Database(dbPath);
+    try {
+        return db.prepare(`SELECT * FROM Label`).all();
+    }
+    catch (err) {
+        console.log(`Error getting task labels`)
+    }
+    finally {
+        db.close();
+    }
+}
+
+/**
  * Create a new label and save it to the database
  */
 function createLabel() {
@@ -42,6 +58,7 @@ function deleteLabel() {
 }
 
 module.exports = {
+    getLabels,
     createLabel,
     deleteLabel
 }

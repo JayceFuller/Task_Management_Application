@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Personal Task Manager - All Tasks</title>
+        <link rel="stylesheet" href="./css/styles.css" />
+        <script src="./js/task.js"></script>
+        <script src="./js/navbar.js"></script>
+    </head>
+
+    <header>
+        <div id="navbar"></div>
+    </header>
+
+    <body>
+        <dialog class="form-popup" style="display: none" id="taskForm">
+            <button type="button" class="close-button" onclick="closeTaskForm()">x</button>
+            <br />
+            <form id="taskForm" class="form-content">
+                <div class="form-field">
+                    <input id="name" type="text" name="name" placeholder="Add task name" />
+                </div>
+
+                <div class="form-field">
+                    <textarea id="details" name="details" placeholder="Add description"></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="due">Duedate:</label><br/>
+                    <input id="due" type="datetime-local" name="due" />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div class="form-field">
+                    <input id="recurrence" type="text" name="recurrence" placeholder="Does not repeat" disabled />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div class="form-field">
+                    <label for="level">Priority Level:</label><br/>
+                    <input id="level" type="text" name="level" />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div class="form-field">
+                    <label for="list">Task List:</label><br/>
+                    <input id="list" type="text" name="list" />
+                </div>
+
+                <button type="submit" class="button">Save</button>
+            </form>
+        </dialog>
+
+        <div class="app">
+            <h2>All Tasks</h2>
+            <hr />
+            <button class="button" onclick="openTaskForm()">+ Create Task</button>
+            <button class="button">+ Create List</button>
+            
+            <div id="lists"></div>
+        </div>
+    </body>
+</html>

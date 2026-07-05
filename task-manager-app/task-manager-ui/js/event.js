@@ -1,3 +1,11 @@
+function openEventForm() {
+    document.getElementById("eventForm").style.display = "block";
+}
+
+function closeEventForm() {
+    document.getElementById("eventForm").style.display = "none";
+}
+
 document.getElementById('task-form').addEventListener('submit', (event) => {
     event.preventDefault();
 

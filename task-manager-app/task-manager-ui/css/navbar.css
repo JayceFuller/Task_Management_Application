@@ -3,28 +3,31 @@
     display: flex;
     list-style: none;
     padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
     margin: 0;
     -webkit-app-region: no-drag;
-    background-color: #119F9D;
-    color: white;
-    gap: 20px;
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    gap: 10px;
 }
 
 .nav-item {
     padding: 5px 10px;
-    line-height: 32px;
+    line-height: 22px;
 }
 
 a {
-    color: white;
+    border-radius: 5px;
+    color: var(--accent-text-color);
     text-decoration: none;
     cursor: pointer;
-    font-size: 20px;
-    font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+    font-size: 14px;
 }
 
 a:hover {
-    background-color: blue;
+    background-color: var(--accent-color-hover);
+    color: rgba(255, 255, 255, 0.90);
 }
 
 .dropdown {
@@ -36,7 +39,7 @@ a:hover {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #119F9D;
+    background-color: var(--accent-color);
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     list-style: none;
     padding: 5px;
