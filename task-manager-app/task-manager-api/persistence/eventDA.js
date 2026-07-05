@@ -42,15 +42,22 @@ function getSevenDayEvents() {
 
 /**
  * Create a new event and save it to the database
+ * 
+ * @param formData contains all the information to save a task to the database in the format
+ * {name, details, location, start, end, recurrence group}
+ * @return the number of rows saved to the database
  */
-function createEvent() {
+function createEvent(formData) {
     const db = new Database(dbPath);
+    const { name, details, location, start, end, recurrence, group } = formData;
     try {
-        return db.prepare(`
+        const sql = db.prepare(`
             INSERT INTO Event (
                 EventId, EventTitle, Description, Location, StartDate, EndDate, IsRecurring, LabelId
             ) VALUES(?, ?, ?, ?, ?, ?, ?, ?)
         `);
+        const rows = sql.run(name, details, location, start, end, recurrence, group);
+        return rows;
     }
     catch (err) {
         console.log(`Error getting today's events`)

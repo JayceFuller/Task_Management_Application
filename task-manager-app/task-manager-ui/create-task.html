@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Personal Task Manager - Create Task</title>
+        <link rel="stylesheet" href="./css/styles.css" />
+        <script src="./js/create-task.js"></script>
+    </head>
+
+    <header>
+        <h2>Create a Task: </h2>
+    </header>
+
+    <body>
+        <div class="app">
+            <form id="task-form">
+                <div>
+                    <label for="name">Name:</label>
+                    <input id="name" type="text" name="name" />
+                </div>
+
+                <div>
+                    <label for="details">Details:</label>
+                    <textarea id="details" name="details"></textarea>
+                </div>
+
+                <div>
+                    <label for="due">Duedate:</label>
+                    <input id="due" type="datetime" name="due" />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div>
+                    <label for="level">Priority Level:</label>
+                    <input id="level" type="text" name="level" />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div>
+                    <label for="group">Group:</label>
+                    <input id="group" type="text" name="group" />
+                </div>
+
+                <div>
+                    <button type="submit">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

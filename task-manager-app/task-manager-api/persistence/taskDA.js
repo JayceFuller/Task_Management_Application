@@ -42,18 +42,25 @@ function getSevenDayTasks() {
 
 /**
  * Create a new task and save it to the database
+ * 
+ * @param formData contains all the information to save a task to the database in the format
+ * {name, details, due, level, group}
+ * @return the number of rows saved to the database
  */
-function createTask() {
+function createTask(formData) {
     const db = new Database(dbPath);
+    const { name, details, due, level, group } = formData;
     try {
-        return db.prepare(`
+        const sql =  db.prepare(`
             INSERT INTO Task (
             TaskId, TaskName, TaskDescription, DueDate, IsCompleted, IsOverdue, PriorityLevel, LabelId
-           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+           ) VALUES (?, ?, ?, 0, 0, ?, ?)
         `);
+        const rows = sql.run(name, details, due, level, group);
+        return rows;
     }
     catch (err) {
-        console.log(`Error creating a new task`)
+        console.log(`Error creating a new task:`, err.message);
     }
     finally {
         db.close();

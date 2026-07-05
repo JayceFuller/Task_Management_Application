@@ -19,6 +19,7 @@ function createWindow() {
         maximizable: false,
         fullscreenable: false, 
         transparent: false,
+        icon: join(__dirname, "./assets/AppIcon.ico"),
         webPreferences: {
             preload: join(__dirname, "./preload.js"),
             contextIsolation: true
@@ -36,8 +37,8 @@ ipcMain.handle('getTodaysTasks', () => {
 ipcMain.handle('getSevenDayTasks', () => {
     return taskDA.getSevenDayTasks();
 })
-ipcMain.handle('createTask', () => {
-    return taskDA.createTask();
+ipcMain.on('createTask', (event, formData) => {
+    taskDA.createTask(formData);
 })
 ipcMain.handle('deleteTask', () => {
     return taskDA.deleteTask();
@@ -50,8 +51,8 @@ ipcMain.handle('getTodaysEvents', () => {
 ipcMain.handle('getSevenDayEvents', () => {
     return eventDA.getSevenDayEvents();
 })
-ipcMain.handle('createEvent', () => {
-    return eventDA.createEvent();
+ipcMain.on('createEvent', (event, formData) => {
+    eventDA.createEvent();
 })
 ipcMain.handle('deleteEvent', () => {
     return eventDA.deleteEvent();

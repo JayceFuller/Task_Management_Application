@@ -24,6 +24,8 @@ body {
     background-color: var(--app-background);
     color: var(--text-color);
     transition: background-color 0.3s ease;
+    background-size: cover;
+    background-repeat: no-repeat;
     user-select: none;
     -webkit-app-region: drag;
 }
