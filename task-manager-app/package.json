@@ -1,19 +1,24 @@
 {
   "name": "task-manager-app",
+  "productName": "Personal Task Manager",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "Manage your calendar tasks and events locally on your desktop",
+  "main": "./main.js",
   "scripts": {
-    "start": "electron ."
+    "dev": "npm run build && electron .",
+    "start": "electron .",
+    "postinstall": "electron-rebuild"
   },
   "keywords": [],
   "author": "Jayce Fuller",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@electron/rebuild": "^4.0.5",
     "electron": "^42.4.1"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8"
+    "better-sqlite3": "^12.11.1",
+    "electron-store": "^11.0.2"
   }
 }

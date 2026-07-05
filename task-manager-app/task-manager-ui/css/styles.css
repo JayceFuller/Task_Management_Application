@@ -1,0 +1,147 @@
+/** App display vriables - Edit these to personalize app design! :D */
+:root {
+    /** 
+    * Background of all pages. Note, if switching to solid color, change background-image in the body{} tag
+    * to instead be background-color and remove the url wrapper of the --app-background here
+    */
+    --app-background: url("../../assets/AppBackground.jpg");
+
+    /** Color of all main text, borders, and lines */
+    --text-color: rgba(255, 255, 255, 0.90);
+
+    /** Color for text of accented elements like buttons and nav-items */
+    --accent-text-color: black;
+
+    /** Color for text of hoverable, accented elements like buttons and nav-items */
+    --accent-text-color-hover: white;
+
+    /** Font used on all text */
+    --font: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+
+    /** Color used for navbar, buttons, and other accented pieces */
+    --accent-color: #087977;
+
+    /** Color for background of hoverable elements like buttons and nav-items */
+    --accent-color-hover: #0D6665;
+}
+
+/** Styles the body of the app */
+body {
+    margin: 0px;
+    width: 100vw;
+    height: 100vh;
+    color: var(--text-color);
+    background-image: var(--app-background);
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: var(--font);
+    user-select: none;
+    -webkit-app-region: drag;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}
+
+/** Sets page margins */
+.app {
+    margin: 15px;
+}
+
+/** Styles container border */
+.border-container {
+    border-style: solid;
+    border-color: var(--text-color);
+    border-width: 2px;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/** Styles the horizontal line */
+hr {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    color: var(--text-color);
+    opacity: 100%;
+    border-width: 2px;
+}
+
+/** Styles heading 2 */
+h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/** Styles heading 3 */
+h3 {
+    margin: 0;
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/** Centers the contents of a container */
+.center-content {
+    display: flex;
+    justify-content: center;
+}
+
+/** Styles all buttons in the app */
+.button {
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.button:hover {
+    background-color: var(--accent-color-hover);
+    color: var(--accent-text-color-hover);
+}
+
+/** Style close buttons */
+.close-button {
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    border-radius: 5px;
+    padding: 3px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-bottom: 5px;
+    float: right;
+}
+
+.close-button:hover {
+    background-color: var(--accent-color-hover);
+    color: var(--accent-text-color-hover);
+}
+
+.form-field input {
+    margin-bottom: 8px;
+}
+
+.form-field input::placeholder {
+    font-family: var(--font);
+}
+
+.form-field textarea {
+    margin-bottom: 3px;
+}
+
+.form-popup {
+    padding: 5px;
+}
+
+.form-content {
+    padding: 10px;
+}

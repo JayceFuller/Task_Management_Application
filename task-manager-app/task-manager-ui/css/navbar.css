@@ -1,0 +1,51 @@
+/** Private CSS styles for the navigation bar */
+.nav {
+    display: flex;
+    list-style: none;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0;
+    -webkit-app-region: no-drag;
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    gap: 10px;
+}
+
+.nav-item {
+    padding: 5px 10px;
+    line-height: 22px;
+}
+
+a {
+    border-radius: 5px;
+    color: var(--accent-text-color);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+a:hover {
+    background-color: var(--accent-color-hover);
+    color: rgba(255, 255, 255, 0.90);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--accent-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    list-style: none;
+    padding: 5px;
+    min-width: 100px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Personal Task Manager - Upcoming Events</title>
+        <link rel="stylesheet" href="./css/styles.css" />
+        <script src="./js/event.js"></script>
+        <script src="./js/navbar.js"></script>
+    </head>
+
+    <header>
+        <div id="navbar"></div>
+    </header>
+
+    <body>
+        <dialog class="form-popup" style="display: none" id="eventForm">
+            <button type="button" class="close-button" onclick="closeEventForm()">x</button>
+            <br />
+            <form id="event-form" class="form-content">
+                <div class="form-field">
+                    <input id="name" type="text" name="name" placeholder="Event name" />
+                </div>
+
+                <div class="form-field">
+                    <textarea id="details" name="details" placeholder="Add description"></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="location">Location:</label><br/>
+                    <input id="location" type="text" name="location" />
+                </div>
+
+                <div class="form-field">
+                    <label for="start">Date: </label><br/>
+                    <input id="start" type="datetime-local" name="start" />
+                    <input id="end" type="datetime-local" name="end" />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div class="form-field">
+                    <label for="recurrence">Is Recurring?</label><br/>
+                    <input id="recurrence" type="number" name="recurrence" />
+                </div>
+
+                <!-- Make this a dropdown -->
+                <div class="form-field">
+                    <label for="group">Group:</label><br/>
+                    <input id="group" type="text" name="group" />
+                </div>
+
+                <button type="submit" class="button">Save</button>
+            </form>
+        </dialog>
+
+        <div class="app">
+            <h2>Upcoming Events</h2>
+            <hr />
+            <button class="button" onclick="openEventForm()">+ Create Event</button>
+            <button class="button">+ Create Label</button>
+            
+            <div id="lists"></div>
+        </div>
+    </body>
+</html>

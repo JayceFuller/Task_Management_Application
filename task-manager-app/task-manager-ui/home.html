@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Personal Task Manager - Today's Tasks</title>
+        <link rel="stylesheet" href="./css/styles.css" />
+        <script src="./js/home.js"></script>
+        <script src="./js/navbar.js"></script>
+    </head>
+
+    <header>
+        <div id="navbar"></div>
+    </header>
+
+    <body>
+        <div class="app">
+            <div>
+                <h2 id="date"></h2>
+                <script>getDateDisplay();</script>
+            </div>
+            <hr />
+
+            <div class="border-container">
+                <h3>Events</h3>
+                <ul id="event-list"></ul>
+                <script>
+                    async function loadEvents() {
+                        try {
+                            const events = await window.api.getTodaysEvents();
+                            const eventEl = document.getElementById('event-list');
+                            eventEl.innerHTML = '';
+                            events.foreach(event => {
+                                const eventItem = document.createElement('li');
+                                eventItem.innerHTML = `${event.name}`;
+                                eventItem.appendChild(eventEl);
+                            })
+                        }
+                        catch (err) {
+                            console.error(`Error loading today's events`);
+                        }
+                    }
+                    loadEvents();
+                </script>
+            </div>
+
+            <div class="border-container">
+                <h3>Tasks</h3>
+                <ul id="task-list"></ul>
+                <script>
+                    async function loadTasks() {
+                        try {
+                            const tasks = await window.api.getTodaysTasks();
+                            const taskEl = document.getElementById('task-list');
+                            taskEl.innerHTML = '';
+                            tasks.foreach(task => {
+                                const taskItem = document.createElement('li');
+                                taskItem.innerHTML = `${task.name}`;
+                                taskItem.appendChild(taskEl);
+                            })
+                        }
+                        catch (err) {
+                            console.error(`Error loading today's tasks`);
+                        }
+                    }
+                    loadTasks();
+                </script>
+            </div>
+        </div>
+    </body>
+</html>
