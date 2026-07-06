@@ -1,35 +1,45 @@
 const err = document.getElementById('err');
-const taskForm = document.getElementById('taskForm')
+const taskForm = document.getElementById('taskForm');
+const listForm = document.getElementById('listForm');
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadPage();
+});
 
 /**
  * Load all tasks from the database and display in groupings by saved labels
  */
-async function loadTasks() {
-    try {
-        const labels = await window.electronAPI.getLabels();
+async function loadPage() {
+        const lists = await window.electronAPI.getLists();
+        const listsArray = Array.isArray(lists) ? lists : (lists.data || []);
         const container = document.getElementById("lists");
         container.innerHTML = "";
 
-        await Promise.all(labels.map(async (label) => {
-            const tasks = await window.electronAPI.getTaskByLabel(label);
+        await Promise.all(listsArray.map(async (list) => {
+            const tasks = await window.electronAPI.getTaskByList(list);
+            const tasksArray =  Array.isArray(tasks) ? tasks : (tasks.data || []);
 
             const groupDiv = document.createElement("div");
-            groupDiv.className = "task-group";
-            groupDiv.innerHTML = `<h3>{ label } </h3>`;
+            groupDiv.className = "border-container display-group";
+            groupDiv.innerHTML = `<h3>${ list.ListName } </h3>`;
 
             const taskList = document.createElement("ul");
-            tasks.forEach(task => {
+            tasksArray.forEach(task => {
                 const taskItem = document.createElement("li");
-                taskItem.textContent = task.name;
-                taskItem.appendChild(taskList);
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.addEventListener("change", (event) => {
+                    //handle checking here
+                });
+                const taskName = document.createTextNode(task.TaskName);
+                taskItem.className = "group-item";
+                taskItem.appendChild(checkbox);
+                taskItem.appendChild(taskName);
+                taskList.appendChild(taskItem);
             });
             groupDiv.appendChild(taskList);
             container.appendChild(groupDiv);
         }))
-    }
-    catch (err) {
-        console.log("Failed to load tasks");
-    }
 }
 
 /** Open task creation dialog */
@@ -47,7 +57,7 @@ taskForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const formData = new FormData(taskForm)
     const taskInfo = {
-        name: formData.get('name'),
+        name: formData.get('task-name'),
         details: formData.get('details'),
         due: formData.get('due'),
         recurrence: formData.get('recurrence'),
@@ -60,7 +70,39 @@ taskForm.addEventListener('submit', async (event) => {
         err.style.display = 'none';
         taskForm.reset();
         closeTaskDialog();
-        loadTasks();
+        loadPage();
+    }
+    else {
+        err.textContent = 'Save failed, please check inputs for errors and try again';
+        err.style.display = 'block';
+    }
+})
+
+
+/** Open list creation dialog */
+function openListDialog() {
+    document.getElementById("listDialog").style.display = "block";
+}
+
+/** Close list creation dialog */
+function closeListDialog() {
+    document.getElementById("listDialog").style.display = "none";
+}
+
+/** Handle listForm submission */
+listForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(listForm)
+    const listInfo = {
+        name: formData.get('list-name'),
+    }
+
+    const isSuccess = await window.electronAPI.createList(listInfo);
+    if (isSuccess) {
+        err.style.display = 'none';
+        listForm.reset();
+        closeListDialog();
+        loadPage();
     }
     else {
         err.textContent = 'Save failed, please check inputs for errors and try again';

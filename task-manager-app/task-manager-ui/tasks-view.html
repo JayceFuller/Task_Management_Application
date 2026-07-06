@@ -20,7 +20,7 @@
             <br />
             <form id="taskForm" class="form-content">
                 <div class="form-field">
-                    <input id="name" type="text" name="name" placeholder="Add task name" required />
+                    <input id="task-name" type="text" name="task-name" placeholder="Add task name" required />
                 </div>
 
                 <div class="form-field">
@@ -55,8 +55,10 @@
         <!-- Task Create Form End -->
 
         <!-- Label Create Form Start -->
-        <dialog>
-            <form id="labelForm" class="form-content">
+        <dialog class="form-popup" style="display: none" id="listDialog">
+            <button type="button" class="close-button" onclick="closeListDialog()">x</button>
+            <br />
+            <form id="listForm" class="form-content">
                 <div class="form-field">
                     <input id="list-name" type="text" name="list-name" placeholder="Add list name"/>
                 </div>
@@ -69,7 +71,7 @@
             <h2>All Tasks</h2>
             <hr />
             <button class="button" onclick="openTaskDialog()">+ Create Task</button>
-            <button class="button">+ Create List</button>
+            <button class="button" onclick="openListDialog()">+ Create List</button>
             
             <div id="lists"></div>
         </div>

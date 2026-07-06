@@ -3,6 +3,7 @@ const { join, dirname } = require("path");
 const isMac = process.platform !== "darwin";
 const { getWindowSettings, saveBounds } = require("./task-manager-api/user-settings");
 const taskDA = require('./task-manager-api/persistence/taskDA.js');
+const listDA = require('./task-manager-api/persistence/listDA.js');
 const eventDA = require('./task-manager-api/persistence/eventDA.js');
 const labelDA = require('./task-manager-api/persistence/labelDA.js');
 
@@ -31,17 +32,30 @@ function createWindow() {
     window.on("resized", () => saveBounds(window.getSize()));
 }
 
-// Handle all label operations
-ipcMain.handle('getLabels', () => {
+// Handle all list operations
+ipcMain.handle('getLists', async () => {
     try {
-        const labels = labelDA.getLabels();
-        return { succes: true, data: labels };
+        const lists = listDA.getLists();
+        return { success: true, data: lists };
     }
     catch (err) {
-        console.log('Error in labelDA.getLabels(): ', err);
+        console.log('Error in listDA.getLists(): ', err);
         return { success: false };
     }
 });
+ipcMain.handle('createList', async (event, formData) => {
+    try {
+        const rows = listDA.createList(formData);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log("Error in listDA.createList: ", err);
+        return { success: false };
+    }
+})
 
 // Handle all task operations
 ipcMain.handle('getTodaysTasks', () => {
@@ -68,14 +82,14 @@ ipcMain.handle('createTask', async (event, formData) => {
 ipcMain.handle('deleteTask', () => {
     return taskDA.deleteTask();
 })
-ipcMain.handle('getTaskByList', (event, label) => {
+ipcMain.handle('getTaskByList', async (event, list) => {
     try {
-        const tasks = taskDA.getTaskByList(label);
+        const tasks = taskDA.getTaskByList(list);
         return { success: true, data: tasks };
     }
     catch (err) {
-        console.log('Error in taskDA.getTaskByLabel(): ', err);
-        return { success: false };
+        console.log('Error in taskDA.getTaskByList(): ', err);
+        return { success: false, data: [] };
     }
 })
 

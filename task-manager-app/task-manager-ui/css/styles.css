@@ -145,3 +145,7 @@ h3 {
 .form-content {
     padding: 10px;
 }
+
+.group-item {
+    list-style: none;
+}

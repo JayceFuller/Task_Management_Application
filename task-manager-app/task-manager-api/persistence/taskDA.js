@@ -79,19 +79,11 @@ function deleteTask() {
     }
 }
 
-function getTaskByList(label) {
+function getTaskByList(list) {
     const db = new Database(dbPath);
-    try {
-        const sql = db.prepare(`SELECT * FROM Task WHERE LabelId = ?`);
-        const rows = sql.run(label);
-        return rows;
-    }
-    catch (err) {
-        console.log(`Error getting tasks by label`)
-    }
-    finally {
-        db.close();
-    }
+    const tasks = db.prepare(`SELECT * FROM Task WHERE ListId = ?`).all(list.ListId);
+    db.close();
+    return tasks;
 }
 
 module.exports = {

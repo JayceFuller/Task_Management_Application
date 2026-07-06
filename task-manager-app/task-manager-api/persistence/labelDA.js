@@ -16,22 +16,22 @@ function getLabels() {
 
 /**
  * Create a new label and save it to the database
+ * 
+ * @param formData contains all the information to save a label to the database in the format
+ * { name }
+ * @return the number of rows saved to the database
  */
-function createLabel() {
+function createLabel(formData) {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`
-            INSERT INTO Label(
-                LabelId, LabelName, Color
-            ) VALUES(?, ?, ?)
-        `);
-    }
-    catch (err) {
-        console.log(`Error saving new label to the database`)
-    }
-    finally {
-        db.close();
-    }
+    const { name } = formData;
+    const sql = db.prepare(`
+        INSERT INTO Label(
+            LabelName, Color
+        ) VALUES(?, ?, ?)
+    `);
+    const rows = sql.run(name, 0);
+    db.close();
+    return rows;
 }
 
 /**
