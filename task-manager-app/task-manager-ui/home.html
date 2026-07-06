@@ -16,7 +16,6 @@
         <div class="app">
             <div>
                 <h2 id="date"></h2>
-                <script>getDateDisplay();</script>
             </div>
             <hr />
 
@@ -45,25 +44,7 @@
 
             <div class="border-container">
                 <h3>Tasks</h3>
-                <ul id="task-list"></ul>
-                <script>
-                    async function loadTasks() {
-                        try {
-                            const tasks = await window.electronAPI.getTodaysTasks();
-                            const taskEl = document.getElementById('task-list');
-                            taskEl.innerHTML = '';
-                            tasks.foreach(task => {
-                                const taskItem = document.createElement('li');
-                                taskItem.innerHTML = `${task.name}`;
-                                taskItem.appendChild(taskEl);
-                            })
-                        }
-                        catch (err) {
-                            console.error(`Error loading today's tasks`);
-                        }
-                    }
-                    loadTasks();
-                </script>
+                <ul id="tasks"></ul>
             </div>
         </div>
     </body>

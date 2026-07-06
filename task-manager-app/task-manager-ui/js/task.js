@@ -26,13 +26,14 @@ async function loadPage() {
         const taskList = document.createElement("ul");
         tasksArray.forEach(task => {
             const taskItem = document.createElement("li");
+            taskItem.className = "group-item";
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.addEventListener("change", (event) => {
                 //handle checking here
             });
-            const taskName = document.createTextNode(task.TaskName);
-            taskItem.className = "group-item";
+            const taskName = document.createTextNode(` ${task.TaskName}`);
+            
             taskItem.appendChild(checkbox);
             taskItem.appendChild(taskName);
             taskList.appendChild(taskItem);

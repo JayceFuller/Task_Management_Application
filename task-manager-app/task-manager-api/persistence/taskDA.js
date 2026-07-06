@@ -4,21 +4,14 @@ const dbPath = path.join(__dirname, '../../data/database.db');
 
 /**
  * Get all tasks for today, as well as overdue tasks
+ * 
+ * @returns array of today's tasks, may be empty
  */
 function getTodaysTasks() {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`
-            SELECT * FROM Task
-            WHERE dueDate = datetime('now') OR isOverdue = 1
-        `).all();
-    }
-    catch (err) {
-        console.log(`Error getting today's tasks`)
-    }
-    finally {
-        db.close();
-    }
+    const tasks = db.prepare(`SELECT * FROM Task WHERE date(DueDate) = CURRENT_DATE OR IsOverdue = 1`).all();
+    db.close();
+    return tasks;
 }
 
 /**
@@ -29,7 +22,7 @@ function getSevenDayTasks() {
     try {
         return db.prepare(`
             SELECT * FROM Task
-            WHERE dueDate <= datetime('now', '+7 days') AND dueDate >= datetime('now')
+            WHERE dueDate <= datetime('now', '+7 days') AND DueDate >= datetime('now')
         `).all();
     }
     catch (err) {

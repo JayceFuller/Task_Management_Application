@@ -52,16 +52,21 @@ ipcMain.handle('createList', async (event, formData) => {
         return { success: false };
     }
     catch (err) {
-        console.log("Error in listDA.createList: ", err);
+        console.log('Error in listDA.createList: ', err);
         return { success: false };
     }
 })
 
 // Handle all task operations
 ipcMain.handle('getTodaysTasks', () => {
-    return new Promise((resolve, reject) => {
-        taskDA.getTodaysTasks();
-    });
+    try {
+        const data = taskDA.getTodaysTasks();
+        return { success: true, data: data };
+    }
+    catch (err) {
+        console.log('Error in taskDA.getTodaysTasks', err);
+        return { success: false };
+    }
 })
 ipcMain.handle('getSevenDayTasks', () => {
     return taskDA.getSevenDayTasks();
