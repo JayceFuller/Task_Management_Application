@@ -1,4 +1,4 @@
-/** Private CSS styles for the navigation bar */
+/** Overall navbar design */
 .nav {
     display: flex;
     list-style: none;
@@ -12,11 +12,11 @@
     gap: 10px;
 }
 
+/** Styles the individual nav links */
 .nav-item {
     padding: 5px 10px;
     line-height: 22px;
 }
-
 a {
     border-radius: 5px;
     color: var(--accent-text-color);
@@ -24,16 +24,15 @@ a {
     cursor: pointer;
     font-size: 14px;
 }
-
 a:hover {
     background-color: var(--accent-color-hover);
     color: rgba(255, 255, 255, 0.90);
 }
 
+/** Styles nav dropdowns */
 .dropdown {
     position: relative;
 }
-
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -45,7 +44,6 @@ a:hover {
     padding: 5px;
     min-width: 100px;
 }
-
 .dropdown:hover .dropdown-menu {
     display: block;
 }

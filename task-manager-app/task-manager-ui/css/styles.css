@@ -1,4 +1,4 @@
-/** App display vriables - Edit these to personalize app design! :D */
+/** App display variables - Edit these to personalize app design! :D */
 :root {
     /** 
     * Background of all pages. Note, if switching to solid color, change background-image in the body{} tag
@@ -23,6 +23,12 @@
 
     /** Color for background of hoverable elements like buttons and nav-items */
     --accent-color-hover: #0D6665;
+
+    /** Color of all popup windows, used for forms and error messages */
+    --dialog-color: lightgray;
+
+    /** Color of text in all popup windows, used for forms and error messages */
+    --dialog-text-color: black;
 }
 
 /** Styles the body of the app */
@@ -42,16 +48,12 @@ body {
 * {
   box-sizing: border-box;
 }
-
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
   -webkit-app-region: no-drag;
   cursor: pointer;
 }
 
-/** Sets page margins */
+/** Sets all page margins */
 .app {
     margin: 15px;
 }
@@ -103,7 +105,6 @@ h3 {
     border-radius: 5px;
     padding: 5px;
 }
-
 .button:hover {
     background-color: var(--accent-color-hover);
     color: var(--accent-text-color-hover);
@@ -120,32 +121,45 @@ h3 {
     margin-bottom: 5px;
     float: right;
 }
-
 .close-button:hover {
     background-color: var(--accent-color-hover);
     color: var(--accent-text-color-hover);
 }
 
+/** Style all form content */
 .form-field input {
-    margin-bottom: 8px;
+    margin-bottom: 5px;
+    width: 100%;
 }
-
 .form-field input::placeholder {
     font-family: var(--font);
 }
-
 .form-field textarea {
     margin-bottom: 3px;
+    min-width: 100%;
 }
-
-.form-popup {
+.form-content {
     padding: 5px;
 }
-
-.form-content {
-    padding: 10px;
+.form-field select {
+    margin-bottom: 3px;
+}
+.form-label {
+    font-size: 14px;
+}
+.form-content .button {
+    margin-top: 5px;
 }
 
+/** Style window popup elements */
+dialog {
+    padding: 5px;
+    display: none;
+    background-color: var(--dialog-color);
+    color: var(--dialog-text-color);
+}
+
+/** Style grouped <li> items */
 .group-item {
     list-style: none;
 }
