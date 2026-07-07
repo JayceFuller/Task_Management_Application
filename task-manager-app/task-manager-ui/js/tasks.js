@@ -14,6 +14,7 @@ async function loadPage() {
     const listsArray = Array.isArray(lists) ? lists : (lists.data || []);
     const container = document.getElementById("lists");
     container.innerHTML = "";
+    console.log(lists)
 
     await Promise.all(listsArray.map(async (list) => {
         const tasks = await window.electronAPI.getTaskByList(list);
@@ -30,7 +31,9 @@ async function loadPage() {
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.addEventListener("change", (event) => {
-                //handle checking here
+                window.electronAPI.completeTask(task);
+                checkbox.checked = true;
+                checkbox.disabled = true;
             });
             const taskName = document.createTextNode(` ${task.TaskName}`);
             

@@ -1,3 +1,4 @@
+const { List } = require('../../task-manager-api/model/list.js');
 const Database = require('better-sqlite3');
 const path = require('path');
 const dbPath = path.join(__dirname, '../../data/database.db');
@@ -5,13 +6,13 @@ const dbPath = path.join(__dirname, '../../data/database.db');
 /**
  * Get all lists from the database
  * 
- * @return array of labels, may be empty
+ * @return array of lists, may be empty
  */
 function getLists() {
     const db = new Database(dbPath);
     const lists = db.prepare(`SELECT * FROM List`).all();
     db.close();
-    return lists;
+    return lists.map(list => new List(list));
 }
 
 /**
@@ -36,21 +37,15 @@ function createList(formData) {
 
 /**
  * Delete a list from the database
+ * 
+ * @param list the list to be deleted
+ * @returns the number of rows saved
  */
 function deleteList() {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`
-            DELETE FROM List
-            WHERE ListId = ?
-        `);
-    }
-    catch (err) {
-        console.log(`Error saving new list to the database`)
-    }
-    finally {
-        db.close();
-    }
+    const sql = db.prepare(`DELETE FROM List WHERE ListId = ?`);
+    const rows = sql.run(list.ListId);
+    db.close();
 }
 
 module.exports = {

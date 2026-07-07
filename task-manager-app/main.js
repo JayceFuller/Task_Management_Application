@@ -7,7 +7,9 @@ const listDA = require('./task-manager-api/persistence/listDA.js');
 const eventDA = require('./task-manager-api/persistence/eventDA.js');
 const labelDA = require('./task-manager-api/persistence/labelDA.js');
 
-// Create the window of the app
+/**
+ * Create the application window
+ */
 function createWindow() {
     const bounds = getWindowSettings();
     Menu.setApplicationMenu(null);
@@ -32,8 +34,10 @@ function createWindow() {
     window.on("resized", () => saveBounds(window.getSize()));
 }
 
-// Handle all list operations
-ipcMain.handle('getLists', async () => {
+/**********************************************************************************************************
+ * List operations
+ *********************************************************************************************************/
+ipcMain.handle('getLists', () => {
     try {
         const lists = listDA.getLists();
         return { success: true, data: lists };
@@ -52,13 +56,28 @@ ipcMain.handle('createList', async (event, formData) => {
         return { success: false };
     }
     catch (err) {
-        console.log('Error in listDA.createList: ', err);
+        console.log('Error in listDA.createList(): ', err);
         return { success: false };
     }
-})
+});
+ipcMain.handle('deleteList', async (event, list) => {
+    try {
+        const rows = listDA.deleteList(list);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in listDA.deleteList(): ', err);
+        return { success: false };
+    }
+});
 
-// Handle all task operations
-ipcMain.handle('getTodaysTasks', () => {
+/**********************************************************************************************************
+ * Task operations
+ *********************************************************************************************************/
+ipcMain.handle('getTodaysTasks', async () => {
     try {
         const data = taskDA.getTodaysTasks();
         return { success: true, data: data };
@@ -67,10 +86,17 @@ ipcMain.handle('getTodaysTasks', () => {
         console.log('Error in taskDA.getTodaysTasks', err);
         return { success: false };
     }
-})
-ipcMain.handle('getSevenDayTasks', () => {
-    return taskDA.getSevenDayTasks();
-})
+});
+ipcMain.handle('getOverdueTasks', async () => {
+    try {
+        const data = taskDA.getOverdueTasks();
+        return { success: true, data: data };
+    }
+    catch (err) {
+        console.log('Error in taskDA.getOverdueTasks', err);
+        return { success: false };
+    }
+});
 ipcMain.handle('createTask', async (event, formData) => {
     try {
         const rows = taskDA.createTask(formData);
@@ -84,9 +110,19 @@ ipcMain.handle('createTask', async (event, formData) => {
         return { success: false };
     }
 });
-ipcMain.handle('deleteTask', () => {
-    return taskDA.deleteTask();
-})
+ipcMain.handle('deleteTask', async (event, task) => {
+    try {
+        const rows = taskDA.deleteTask(task);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in taskDA.deleteTask(): ', err);
+        return { success: false };
+    }
+});
 ipcMain.handle('getTaskByList', async (event, list) => {
     try {
         const tasks = taskDA.getTaskByList(list);
@@ -96,9 +132,21 @@ ipcMain.handle('getTaskByList', async (event, list) => {
         console.log('Error in taskDA.getTaskByList(): ', err);
         return { success: false, data: [] };
     }
-})
+});
+ipcMain.handle('completeTask', async (event, list) => {
+    try {
+        const rows = taskDA.completeTask(list);
+        return { success: true };
+    }
+    catch (err) {
+        console.log('Error in taskDA.completeTask(): ', err);
+        return { success: false };
+    }
+});
 
-// Handle all event operations
+/**********************************************************************************************************
+ * Event operations
+ *********************************************************************************************************/
 ipcMain.handle('getTodaysEvents', () => {
     return new Promise((resolve, reject) => {
         eventDA.getTodaysEvents();
@@ -114,7 +162,9 @@ ipcMain.handle('deleteEvent', () => {
     return eventDA.deleteEvent();
 })
 
-//Handle all label operations
+/**********************************************************************************************************
+ * Label operations
+ *********************************************************************************************************/
 ipcMain.handle('createLabel', () => {
     return labelDA.createLabel();
 })
@@ -122,7 +172,7 @@ ipcMain.handle('deleteLabel', () => {
     return labelDA.deleteLabel();
 })
 
-// Run the app
+/** Run application */
 app.whenReady().then(createWindow);
 app.on("window-all-closed", () => {
   if (isMac) app.quit();

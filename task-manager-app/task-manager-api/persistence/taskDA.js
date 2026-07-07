@@ -1,36 +1,30 @@
+const { Task } = require('../../task-manager-api/model/task.js'); 
 const Database = require('better-sqlite3');
 const path = require('path');
 const dbPath = path.join(__dirname, '../../data/database.db');
 
 /**
- * Get all tasks for today, as well as overdue tasks
+ * Get all tasks for today, regardless of completion status
  * 
  * @returns array of today's tasks, may be empty
  */
 function getTodaysTasks() {
     const db = new Database(dbPath);
-    const tasks = db.prepare(`SELECT * FROM Task WHERE date(DueDate) = CURRENT_DATE OR IsOverdue = 1`).all();
+    const tasks = db.prepare(`SELECT * FROM Task WHERE date(DueDate) = CURRENT_DATE`).all();
     db.close();
-    return tasks;
+    return tasks.map(task => new Task(task));
 }
 
 /**
- * Get all tasks for the next 7 days
+ * Gets all incomplete tasks from previous dates
+ * 
+ * @returns array of overdue tasks, may be empty
  */
-function getSevenDayTasks() {
+function getOverdueTasks() {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`
-            SELECT * FROM Task
-            WHERE dueDate <= datetime('now', '+7 days') AND DueDate >= datetime('now')
-        `).all();
-    }
-    catch (err) {
-        console.log(`Error getting today's tasks`)
-    }
-    finally {
-        db.close();
-    }
+    const tasks = db.prepare(`SELECT * FROM Task WHERE date(DueDate) < CURRENT_DATE AND IsCompleted = 0`).all();
+    db.close();
+    return tasks.map(task => new Task(task));
 }
 
 /**
@@ -38,51 +32,66 @@ function getSevenDayTasks() {
  * 
  * @param formData contains all the information to save a task to the database in the format
  * { name, details, due, recurrence, level, list }
- * @return the number of rows saved to the database
+ * @returns the number of rows saved to the database
  */
 function createTask(formData) {
     const db = new Database(dbPath);
     const { name, details, due, recurrence, level, list } = formData;
     const sql =  db.prepare(`
         INSERT INTO Task (
-        TaskName, TaskDescription, DueDate, PriorityLevel, ListId, IsCompleted, IsOverdue, isRecurring
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        TaskName, TaskDesc, DueDate, Recurrence, PriorityLevel, ListId, IsCompleted
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
-    const rows = sql.run(name, details, due, level, list, 0, 0, recurrence);
+    const rows = sql.run(name, details, due, recurrence, level, list, 0);
     db.close();
     return rows;
 }
 
 /**
  * Delete a task from the database
+ * 
+ * @param task the task to be deleted
+ * @returns the number of rows saved
  */
-function deleteTask() {
+function deleteTask(task) {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`
-            DELETE FROM Task
-            WHERE TaskId = ?
-        `);
-    }
-    catch (err) {
-        console.log(`Error creating a new task`)
-    }
-    finally {
-        db.close();
-    }
+    const sql = db.prepare(`DELETE FROM Task WHERE TaskId = ?`);
+    const rows = sql.run(task.TaskId);
+    return rows;
 }
 
+/**
+ * Gets all tasks corresponding to a given list
+ * 
+ * @param list the list item to search by
+ * @returns an array of all tasks matching the list, may be empty
+ */
 function getTaskByList(list) {
     const db = new Database(dbPath);
-    const tasks = db.prepare(`SELECT * FROM Task WHERE ListId = ?`).all(list.ListId);
+    const tasks = db.prepare(`SELECT * FROM Task WHERE ListId = ? ORDER BY DueDate`).all(list.ListId);
     db.close();
-    return tasks;
+    return tasks.map(task => new Task(task));
+}
+
+/**
+ * Changes the status of a task to completed
+ * 
+ * @param task the task item being completed
+ * @returns the number of rows modified
+ */
+function completeTask(task) {
+    const db = new Database(dbPath);
+    const sql = db.prepare(`UPDATE Task SET IsCompleted = 1 WHERE TaskId = ?`);
+    const rows = sql.run(task.TaskId)
+    db.close();
+    return rows;
 }
 
 module.exports = {
     getTodaysTasks,
-    getSevenDayTasks,
+    getOverdueTasks,
     createTask,
     deleteTask,
-    getTaskByList
+    getTaskByList,
+    completeTask
 }

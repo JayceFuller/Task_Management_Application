@@ -81,7 +81,7 @@ hr {
 h2 {
     margin: 0;
     font-size: 24px;
-    font-weight: bold;
+    font-style: var(--font);
 }
 
 /** Styles heading 3 */
@@ -89,7 +89,15 @@ h3 {
     margin: 0;
     margin-left: 10px;
     font-size: 20px;
-    font-weight: bold;
+    font-style: var(--font);
+}
+
+/** Styles heading 4 */
+h4 {
+    margin: 0;
+    margin-left: 10px;
+    font-size: 18px;
+    font-style: var(--font);
 }
 
 /** Centers the contents of a container */
@@ -162,4 +170,9 @@ dialog {
 /** Style grouped <li> items */
 .group-item {
     list-style: none;
+}
+
+/** Add strike through to text */
+.strike-through {
+    text-decoration: line-through;
 }

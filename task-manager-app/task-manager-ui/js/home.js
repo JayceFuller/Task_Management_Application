@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     getDateDisplay();
     loadTasks();
+    loadOverdue();
 });
 
 /**
@@ -44,4 +45,34 @@ async function loadTasks() {
         taskItem.appendChild(taskName);
         taskEl.appendChild(taskItem);
     });
+}
+
+async function loadOverdue() {
+    const overdue = await window.electronAPI.getOverdueTasks();
+    const overdueArray =  Array.isArray(overdue) ? overdue : (overdue.data || []);
+    const overdueContainer = document.getElementById('overdueContainer');
+
+    if (overdueArray.length != 0) {
+        overdueContainer.style.display = 'block';
+        const overdueEl = document.getElementById('overdue');
+        overdueEl.innerHTML = '';
+
+        overdueArray.forEach(task => {
+            const taskItem = document.createElement('li');
+            taskItem.className = "group-item";
+            const taskName = document.createTextNode(` ${task.TaskName}`);
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.addEventListener("change", (event) => {
+                //handle checking here
+            });
+
+            taskItem.appendChild(checkbox);
+            taskItem.appendChild(taskName);
+            overdueEl.appendChild(taskItem);
+        });
+    }
+    else {
+        overdueContainer.style.display = 'none';
+    }
 }
