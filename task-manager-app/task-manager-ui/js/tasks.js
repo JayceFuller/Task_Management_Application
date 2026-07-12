@@ -2,35 +2,33 @@ const err = document.getElementById('err');
 const taskForm = document.getElementById('taskForm');
 const listForm = document.getElementById('listForm');
 
-document.addEventListener("DOMContentLoaded", () => {
+/** Create the initial page content */
+document.addEventListener('DOMContentLoaded', () => {
     loadPage();
 });
 
-/**
- * Load all tasks from the database and display in groupings by saved labels
- */
+/** Load all tasks from the database and display in groupings by saved labels */
 async function loadPage() {
     const lists = await window.electronAPI.getLists();
     const listsArray = Array.isArray(lists) ? lists : (lists.data || []);
-    const container = document.getElementById("lists");
-    container.innerHTML = "";
-    console.log(lists)
+    const container = document.getElementById('lists');
+    container.innerHTML = '';
 
     await Promise.all(listsArray.map(async (list) => {
         const tasks = await window.electronAPI.getTaskByList(list);
         const tasksArray =  Array.isArray(tasks) ? tasks : (tasks.data || []);
 
-        const groupDiv = document.createElement("div");
-        groupDiv.className = "border-container display-group";
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'border-container display-group';
         groupDiv.innerHTML = `<h3>${ list.ListName } </h3>`;
 
-        const taskList = document.createElement("ul");
+        const taskList = document.createElement('ul');
         tasksArray.forEach(task => {
-            const taskItem = document.createElement("li");
-            taskItem.className = "group-item";
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.addEventListener("change", (event) => {
+            const taskItem = document.createElement('li');
+            taskItem.className = 'group-item';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.addEventListener('change', (event) => {
                 window.electronAPI.completeTask(task);
                 checkbox.checked = true;
                 checkbox.disabled = true;
@@ -48,7 +46,7 @@ async function loadPage() {
 
 /** Open task creation dialog */
 async function openTaskDialog() {
-    document.getElementById("taskDialog").style.display = "block";
+    document.getElementById('taskDialog').style.display = 'block';
     const lists = await window.electronAPI.getLists();
     const listsArray = Array.isArray(lists) ? lists : (lists.data || []);
     const listDropdown = document.getElementById('listSelect');
@@ -63,7 +61,7 @@ async function openTaskDialog() {
 
 /** Close task creation dialog */
 function closeTaskDialog() {
-    document.getElementById("taskDialog").style.display = "none";
+    document.getElementById('taskDialog').style.display = 'none';
 }
 
 /** Handle taskForm submission */
@@ -77,7 +75,7 @@ taskForm.addEventListener('submit', async (event) => {
         recurrence: formData.get('recurrence'),
         level: formData.get('level'),
         list: formData.get('list')
-    }
+    };
 
     const isSuccess = await window.electronAPI.createTask(taskInfo);
     if (isSuccess) {
@@ -95,18 +93,18 @@ taskForm.addEventListener('submit', async (event) => {
 
 /** Open list creation dialog */
 function openListDialog() {
-    document.getElementById("listDialog").style.display = "block";
+    document.getElementById('listDialog').style.display = 'block';
 }
 
 /** Close list creation dialog */
 function closeListDialog() {
-    document.getElementById("listDialog").style.display = "none";
+    document.getElementById('listDialog').style.display = 'none';
 }
 
 /** Handle listForm submission */
 listForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const formData = new FormData(listForm)
+    const formData = new FormData(listForm);
     const listInfo = {
         name: formData.get('list-name'),
     }

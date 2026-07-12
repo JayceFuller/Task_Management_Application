@@ -1,3 +1,4 @@
+const { Label } = require('../../task-manager-api/model/label.js');
 const Database = require('better-sqlite3');
 const path = require('path');
 const dbPath = path.join(__dirname, '../../data/database.db');
@@ -11,7 +12,7 @@ function getLabels() {
     const db = new Database(dbPath);
     const labels = db.prepare(`SELECT * FROM Label`).all();
     db.close();
-    return labels;
+    return labels.map(label => new Label(label));
 }
 
 /**
@@ -26,31 +27,26 @@ function createLabel(formData) {
     const { name } = formData;
     const sql = db.prepare(`
         INSERT INTO Label(
-            LabelName, Color
-        ) VALUES(?, ?, ?)
+            LabelName
+        ) VALUES(?)
     `);
-    const rows = sql.run(name, 0);
+    const rows = sql.run(name);
     db.close();
     return rows;
 }
 
 /**
  * Delete a label from the database
+ * 
+ * @param label the label to be deleted
+ * @returns the number of rows saved
  */
-function deleteLabel() {
+function deleteLabel(label) {
     const db = new Database(dbPath);
-    try {
-        return db.prepare(`
-            DELETE FROM Label
-            WHERE LabelId = ?
-        `);
-    }
-    catch (err) {
-        console.log(`Error saving new label to the database`)
-    }
-    finally {
-        db.close();
-    }
+    const sql = db.prepare(`DELETE FROM Label WHERE LabelId = ?`);
+    const rows = sql.run(label.LabelId);
+    db.close();
+    return rows;
 }
 
 module.exports = {

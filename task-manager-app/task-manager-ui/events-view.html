@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <title>Personal Task Manager - Upcoming Events</title>
         <link rel="stylesheet" href="./css/styles.css" />
-        <script src="./js/event.js"></script>
+        <script src="./js/events.js" defer></script>
         <script src="./js/navbar.js"></script>
     </head>
 
@@ -13,12 +13,16 @@
     </header>
 
     <body>
-        <dialog class="form-popup" style="display: none" id="eventForm">
-            <button type="button" class="close-button" onclick="closeEventForm()">x</button>
+        <!-- Error Dialog -->
+        <dialog id="err"></dialog>
+
+        <!-- Event Create Form Start -->
+        <dialog id="eventDialog">
+            <button type="button" class="close-button" onclick="closeEventDialog()">x</button>
             <br />
-            <form id="event-form" class="form-content">
+            <form id="eventForm" class="form-content">
                 <div class="form-field">
-                    <input id="name" type="text" name="name" placeholder="Event name" />
+                    <input id="event-name" type="text" name="event-name" placeholder="Add event name" required />
                 </div>
 
                 <div class="form-field">
@@ -32,33 +36,50 @@
 
                 <div class="form-field">
                     <label for="start">Date: </label><br/>
-                    <input id="start" type="datetime-local" name="start" />
-                    <input id="end" type="datetime-local" name="end" />
+                    <input id="start" type="datetime-local" name="start" required />
+                    <input id="end" type="datetime-local" name="end" required />
                 </div>
 
-                <!-- Make this a dropdown -->
                 <div class="form-field">
-                    <label for="recurrence">Is Recurring?</label><br/>
-                    <input id="recurrence" type="number" name="recurrence" />
-                </div>
+                    <select id="recurrence" name="recurrence" form="eventForm" required>
+                        <option value="0" selected>Does not recurr</option>
+                        <option value="1">Daily</option>
+                        <option value="2">Weekly</option>
+                        <option value="3">Monthly</option>
+                        <option value="4">Annually</option>
+                    </select>
+                </div><br/>
 
-                <!-- Make this a dropdown -->
                 <div class="form-field">
-                    <label for="group">Group:</label><br/>
-                    <input id="group" type="text" name="group" />
+                    <label for="label" class="form-label">Label:</label>
+                    <select id="labelSelect" name="label" form="eventForm" required></select>
                 </div>
 
                 <button type="submit" class="button">Save</button>
             </form>
         </dialog>
+        <!-- Event Create Form End -->
+
+        <!-- Label Create Form Start -->
+        <dialog id="labelDialog">
+            <button type="button" class="close-button" onclick="closeLabelDialog()">x</button>
+            <br />
+            <form id="labelForm" class="form-content">
+                <div class="form-field">
+                    <input id="label-name" type="text" name="label-name" placeholder="Add label name"/>
+                </div>
+                <button type="submit" class="button">Save</button>
+            </form>
+        </dialog>
+        <!-- Label Create Form End -->
 
         <div class="app">
             <h2>Upcoming Events</h2>
             <hr />
-            <button class="button" onclick="openEventForm()">+ Create Event</button>
-            <button class="button">+ Create Label</button>
+            <button class="button" onclick="openEventDialog()">+ Create Event</button>
+            <button class="button" onclick="openLabelDialog()">+ Create Label</button>
             
-            <div id="lists"></div>
+            <div id="labels"></div>
         </div>
     </body>
 </html>

@@ -39,7 +39,7 @@ function createTask(formData) {
     const { name, details, due, recurrence, level, list } = formData;
     const sql =  db.prepare(`
         INSERT INTO Task (
-        TaskName, TaskDesc, DueDate, Recurrence, PriorityLevel, ListId, IsCompleted
+            TaskName, TaskDesc, DueDate, Recurrence, PriorityLevel, ListId, IsCompleted
         ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
     const rows = sql.run(name, details, due, recurrence, level, list, 0);

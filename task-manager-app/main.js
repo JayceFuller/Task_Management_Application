@@ -148,25 +148,67 @@ ipcMain.handle('completeTask', async (event, list) => {
  * Event operations
  *********************************************************************************************************/
 ipcMain.handle('getTodaysEvents', () => {
-    return new Promise((resolve, reject) => {
-        eventDA.getTodaysEvents();
-    });
-})
-ipcMain.handle('getSevenDayEvents', () => {
-    return eventDA.getSevenDayEvents();
-})
-ipcMain.on('createEvent', (event, formData) => {
-    eventDA.createEvent();
-})
+    try {
+        const data = eventDA.getTodaysEvents();
+        return { success: true, data: data };
+    }
+    catch (err) {
+        console.log('Error in eventDA.getTodaysEvents(): ', err);
+        return { success: false };
+    }
+});
+ipcMain.handle('createEvent', async (event, formData) => {
+    try {
+        const rows = eventDA.createEvent(formData);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in eventDA.createEvent(): ', err);
+        return { success: false };
+    }
+});
 ipcMain.handle('deleteEvent', () => {
     return eventDA.deleteEvent();
 })
+ipcMain.handle('getEventByLabel', async (event, label) => {
+    try {
+        const events = eventDA.getEventByLabel(label);
+        return { success: true, data: events };
+    }
+    catch (err) {
+        console.log('Error in eventDA.getEventByLabel(): ', err);
+        return { success: false, data: [] };
+    }
+});
 
 /**********************************************************************************************************
  * Label operations
  *********************************************************************************************************/
-ipcMain.handle('createLabel', () => {
-    return labelDA.createLabel();
+ipcMain.handle('getLabels', () => {
+    try {
+        const labels = labelDA.getLabels();
+        return { success: true, data: labels };
+    }
+    catch (err) {
+        console.log('Error in labelDA.getLabels(): ', err);
+        return { success: false };
+    }
+});
+ipcMain.handle('createLabel', (event, formData) => {
+    try {
+        const rows = labelDA.createLabel(formData);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in labelDA.createLabel(): ', err);
+        return { success: false };
+    }
 })
 ipcMain.handle('deleteLabel', () => {
     return labelDA.deleteLabel();
@@ -177,3 +219,6 @@ app.whenReady().then(createWindow);
 app.on("window-all-closed", () => {
   if (isMac) app.quit();
 });
+ipcMain.handle('quitApp', () => {
+    app.quit();
+})

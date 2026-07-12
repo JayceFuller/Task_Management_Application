@@ -46,6 +46,7 @@ function deleteList() {
     const sql = db.prepare(`DELETE FROM List WHERE ListId = ?`);
     const rows = sql.run(list.ListId);
     db.close();
+    return rows;
 }
 
 module.exports = {
