@@ -26,8 +26,7 @@ function openWeekView() {
 }
 
 async function loadTasks() {
-    const tasks = await window.electronAPI.getTodaysTasks();
-    const tasksArray =  Array.isArray(tasks) ? tasks : (tasks.data || []);
+    const tasksArray = await window.electronAPI.getTodaysTasks() || [];
     const taskEl = document.getElementById('tasks');
     taskEl.innerHTML = '';
 
@@ -48,8 +47,7 @@ async function loadTasks() {
 }
 
 async function loadOverdue() {
-    const overdue = await window.electronAPI.getOverdueTasks();
-    const overdueArray =  Array.isArray(overdue) ? overdue : (overdue.data || []);
+    const overdueArray = await window.electronAPI.getOverdueTasks() || [];
     const overdueContainer = document.getElementById('overdueContainer');
 
     if (overdueArray.length != 0) {

@@ -93,10 +93,9 @@ h3 {
 }
 
 /** Styles heading 4 */
-h4 {
-    margin: 0;
+.subheader {
     margin-left: 10px;
-    font-size: 18px;
+    font-size: 16px;
     font-style: var(--font);
 }
 
@@ -104,6 +103,22 @@ h4 {
 .center-content {
     display: flex;
     justify-content: center;
+}
+
+.d-flex-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.nobkg-button {
+    float: right;
+    background: none;
+    color: var(--text-color);
 }
 
 /** Styles all buttons in the app */
@@ -175,4 +190,34 @@ dialog {
 /** Add strike through to text */
 .strike-through {
     text-decoration: line-through;
+}
+
+.group-item a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.group-item a:hover {
+    color: var(--accent-color);
+}
+
+.group {
+    min-width: 300px;
+}
+
+.all-groups {
+    display: flex;
+    flex: row;
+    overflow-x: auto;
+    overflow-y: auto;
+    gap: 10px;
+    height: 400px;
+}
+
+.m0 {
+    margin: 0px;
+}
+
+ul {
+    padding-left: 20px;
 }

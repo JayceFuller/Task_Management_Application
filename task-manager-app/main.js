@@ -18,8 +18,8 @@ function createWindow() {
         width: bounds[0],
         height: bounds[1],
         resizable: true,
-        maximizable: false,
-        fullscreenable: false, 
+        maximizable: true,
+        fullscreenable: true, 
         transparent: false,
         icon: join(__dirname, "./assets/AppIcon.ico"),
         webPreferences: {
@@ -40,11 +40,11 @@ function createWindow() {
 ipcMain.handle('getLists', () => {
     try {
         const lists = listDA.getLists();
-        return { success: true, data: lists };
+        return lists;
     }
     catch (err) {
         console.log('Error in listDA.getLists(): ', err);
-        return { success: false };
+        return [];
     }
 });
 ipcMain.handle('createList', async (event, formData) => {
@@ -80,21 +80,32 @@ ipcMain.handle('deleteList', async (event, list) => {
 ipcMain.handle('getTodaysTasks', async () => {
     try {
         const data = taskDA.getTodaysTasks();
-        return { success: true, data: data };
+        return data;
     }
     catch (err) {
         console.log('Error in taskDA.getTodaysTasks', err);
-        return { success: false };
+        return [];
     }
 });
 ipcMain.handle('getOverdueTasks', async () => {
     try {
         const data = taskDA.getOverdueTasks();
-        return { success: true, data: data };
+        return data;
     }
     catch (err) {
         console.log('Error in taskDA.getOverdueTasks', err);
-        return { success: false };
+        return [];
+    }
+});
+ipcMain.handle('getTaskById', async (event, taskId) => {
+    try {
+        console.log("hello")
+        const task = taskDA.getTaskById(taskId);
+        return task;
+    }
+    catch (err) {
+        console.log('Error in taskDA.getTaskById(): ', err);
+        return [];
     }
 });
 ipcMain.handle('createTask', async (event, formData) => {
@@ -123,14 +134,24 @@ ipcMain.handle('deleteTask', async (event, task) => {
         return { success: false };
     }
 });
-ipcMain.handle('getTaskByList', async (event, list) => {
+ipcMain.handle('getTasksByList', async (event, list) => {
     try {
-        const tasks = taskDA.getTaskByList(list);
-        return { success: true, data: tasks };
+        const tasks = taskDA.getTasksByList(list);
+        return tasks;
     }
     catch (err) {
-        console.log('Error in taskDA.getTaskByList(): ', err);
-        return { success: false, data: [] };
+        console.log('Error in taskDA.getTasksByList(): ', err);
+        return [];
+    }
+});
+ipcMain.handle('getCompletedTasksByList', async (event, list) => {
+    try {
+        const tasks = taskDA.getCompletedTasksByList(list);
+        return tasks;
+    }
+    catch (err) {
+        console.log('Error in taskDA.getCompletedTasksByList(): ', err);
+        return [];
     }
 });
 ipcMain.handle('completeTask', async (event, list) => {

@@ -9,8 +9,10 @@ const electronAPI = {
     getOverdueTasks: () => ipcRenderer.invoke('getOverdueTasks'),
     getTodaysEvents: () => ipcRenderer.invoke('getTodaysEvents'),
     createTask: (formData) => ipcRenderer.invoke('createTask', formData),
-    getTaskByList: (list) => ipcRenderer.invoke('getTaskByList', list),
+    getTasksByList: (list) => ipcRenderer.invoke('getTasksByList', list),
+    getCompletedTasksByList: (list) => ipcRenderer.invoke('getCompletedTasksByList', list),
     completeTask: (list) => ipcRenderer.invoke('completeTask', list),
+    getTaskById: (taskId) => ipcRenderer.invoke('getTaskById', taskId),
 
     /** List operations */
     getLists: () => ipcRenderer.invoke('getLists'),

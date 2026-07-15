@@ -66,11 +66,37 @@ function deleteTask(task) {
  * @param list the list item to search by
  * @returns an array of all tasks matching the list, may be empty
  */
-function getTaskByList(list) {
+function getTasksByList(list) {
     const db = new Database(dbPath);
-    const tasks = db.prepare(`SELECT * FROM Task WHERE ListId = ? ORDER BY DueDate`).all(list.ListId);
+    const tasks = db.prepare(`SELECT * FROM Task WHERE ListId = ? AND IsCompleted = ? ORDER BY DueDate`).all(list.ListId, 0);
     db.close();
     return tasks.map(task => new Task(task));
+}
+
+/**
+ * Gets all completed tasks corresponding to a given list
+ * 
+ * @param list the list item to search by
+ * @returns an array of all tasks matching the list, may be empty
+ */
+function getCompletedTasksByList(list) {
+    const db = new Database(dbPath);
+    const tasks = db.prepare(`SELECT * FROM Task WHERE ListId = ? AND IsCompleted = ? ORDER BY DueDate`).all(list.ListId, 1);
+    db.close();
+    return tasks.map(task => new Task(task));
+}
+
+/**
+ * Get a task by a given id
+ * 
+ * @param taskId the id of the task to be fetched
+ * @returns the task found
+ */
+function getTaskById(taskId) {
+    const db = new Database(dbPath);
+    const task = db.prepare(`SELECT * FROM Task WHERE TaskId = ?`).all(taskId);
+    db.close();
+    return new Task(task);
 }
 
 /**
@@ -92,6 +118,8 @@ module.exports = {
     getOverdueTasks,
     createTask,
     deleteTask,
-    getTaskByList,
-    completeTask
+    getTasksByList,
+    getCompletedTasksByList,
+    completeTask,
+    getTaskById
 }

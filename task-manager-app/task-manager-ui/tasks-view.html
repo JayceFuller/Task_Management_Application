@@ -5,6 +5,7 @@
         <title>Personal Task Manager - All Tasks</title>
         <link rel="stylesheet" href="./css/styles.css" />
         <script src="./js/tasks.js" defer></script>
+        <script src="./js/lists.js" defer></script>
         <script src="./js/navbar.js"></script>
     </head>
 
@@ -17,21 +18,22 @@
         <dialog id="err"></dialog>
 
         <!-- Task Create Form Start -->
-        <dialog id="taskDialog">
-            <button type="button" class="close-button" onclick="closeTaskDialog()">x</button>
+        <dialog id="taskFormDialog">
+            <button type="button" class="close-button" onclick="closeCreateForm()">x</button>
             <br />
             <form id="taskForm" class="form-content">
                 <div class="form-field">
-                    <input id="task-name" type="text" name="task-name" placeholder="Add task name" required />
-                </div>
-
-                <div class="form-field">
-                    <textarea id="details" name="details" placeholder="Add description"></textarea>
+                    <input id="task-name" type="text" name="task-name" form="taskForm" placeholder="Add task name" required />
                 </div>
 
                 <div class="form-field">
                     <label for="due" class="form-label">Duedate:</label><br/>
-                    <input id="due" type="datetime-local" name="due" required />
+                    <input id="due" type="datetime-local" form="taskForm" name="due" required />
+                </div>
+
+                <div class="d-flex-row">
+                    <input id="all-day" type="checkbox" name="all-day" form="taskForm" />
+                    <label for="all-day" class="form-label">All Day</label>
                 </div>
 
                 <div class="form-field">
@@ -43,6 +45,10 @@
                         <option value="4">Annually</option>
                     </select>
                 </div><br/>
+
+                <div class="form-field">
+                    <textarea id="details" name="details" form="taskForm" placeholder="Add description"></textarea>
+                </div>
 
                 <div class="form-field">
                     <label for="list" class="form-label">List:</label>
@@ -80,7 +86,7 @@
         <div class="app">
             <h2>All Tasks</h2>
             <hr />
-            <button class="button" onclick="openTaskDialog()">+ Create Task</button>
+            <button class="button" onclick="openCreateForm()">+ Create Task</button>
             <button class="button" onclick="openListDialog()">+ Create List</button>
             
             <div id="lists"></div>

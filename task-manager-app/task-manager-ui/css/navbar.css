@@ -17,14 +17,14 @@
     padding: 5px 10px;
     line-height: 22px;
 }
-a {
+.nav a {
     border-radius: 5px;
     color: var(--accent-text-color);
     text-decoration: none;
     cursor: pointer;
     font-size: 14px;
 }
-a:hover {
+.nav a:hover {
     background-color: var(--accent-color-hover);
     color: rgba(255, 255, 255, 0.90);
 }
