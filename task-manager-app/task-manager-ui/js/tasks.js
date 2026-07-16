@@ -2,74 +2,73 @@ const err = document.getElementById('err');
 const taskForm = document.getElementById('taskForm');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
+const menu = document.getElementById('three-dots');
 
 /** Create the initial page content */
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
 });
 
-/** Load all tasks from the database and display in groupings by saved labels */
 async function loadPage() {
-    const listsArray = /** @type { List[] } */ await window.electronAPI.getLists() || [];
     const container = document.getElementById('lists');
     container.innerHTML = '';
     container.className = 'all-groups';
 
-    await Promise.all(listsArray.map(async (list) => {
-        const tasksArray = /** @type { Task[] } */ await window.electronAPI.getTasksByList(list) || [];
-
-        const groupDiv = document.createElement('div');
-        groupDiv.className = 'border-container group';
-        const listHeader = document.createElement('div');
-        listHeader.className = 'd-flex-row space-between';
-        listHeader.innerHTML = `<h3>${ list.ListName } </h3> <button class="nobkg-button">&vellip;</button>`;
-        groupDiv.appendChild(listHeader);
-
-        const taskList = document.createElement('ul');
-        tasksArray.forEach(task => {
-            const taskItem = document.createElement('li');
-            taskItem.className = 'group-item';
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.addEventListener('change', (event) => {
-                completeTask(task);
-            });
-            const taskLink = document.createElement('a');
-            //taskLink.href = `./task-detail.html?id=${ task.TaskId }`;
-            //taskLink.onclick = openTaskDialog(task)
-            taskLink.textContent = `${ task.TaskName }`
-            
-            taskItem.appendChild(checkbox);
-            taskItem.appendChild(taskLink);
-            taskList.appendChild(taskItem);
-        });
-
-        const completedTasks = document.createElement('ul');
-        completedTasks.className = 'm0';
-        const completedTasksArray = /** @type { Task[] } */ await window.electronAPI.getCompletedTasksByList(list);
-        completedTasksArray.forEach(task => {
-            const taskItem = document.createElement('li');
-            taskItem.className = 'group-item strike-through';
-            const taskLink = document.createElement('a');
-            taskLink.textContent = `${ task.TaskName }`
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = true;
-            checkbox.disabled = true;
-
-            taskItem.appendChild(checkbox);
-            taskItem.appendChild(taskLink);
-            completedTasks.appendChild(taskItem);
-        });
-        const completeHeader = document.createElement('div');
-        completeHeader.className = 'subheader';
-        completeHeader.innerHTML = `Completed (${ completedTasksArray.length })`;
-
-        groupDiv.appendChild(taskList);
-        groupDiv.appendChild(completeHeader);
-        groupDiv.appendChild(completedTasks);
-        container.appendChild(groupDiv);
+    const listsArray = /** @type { List[] } */ await window.electronAPI.getLists() || [];
+    const listElements = await Promise.all(listsArray.map(async (list) => {
+        return await createListElement(list);
     }));
+
+    listElements.forEach(el => container.appendChild(el));
+}
+
+async function createListElement(list) {
+    const tasksArray = /** @type { Task[] } */ await window.electronAPI.getTasksByList(list) || [];
+    const completedTasksArray = /** @type { Task[] } */ await window.electronAPI.getCompletedTasksByList(list) || [];
+
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'border-container group';
+    groupDiv.dataset.listId = list.ListId; 
+
+    groupDiv.innerHTML = `
+        <div class="d-flex-row space-between">
+        <h3>${list.ListName}</h3>
+        <button class="nobkg-button vellip-btn">⋮</button>
+        </div>
+        <ul class="task-list"></ul>
+        <div class="subheader">Completed (${completedTasksArray.length})</div>
+        <ul class="completed-tasks m0"></ul>
+    `;
+
+    groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => {
+        openDropdownMenu(e, list.ListId);
+    });
+
+    const taskListUl = groupDiv.querySelector('.task-list');
+    tasksArray.forEach(task => {
+        const li = document.createElement('li');
+        li.className = 'group-item';
+        li.dataset.taskId = task.TaskId;
+        li.innerHTML = `
+        <input type="checkbox" class="task-checkbox">
+        <a class="task-link">${task.TaskName}</a>
+        `;
+        li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
+        taskListUl.appendChild(li);
+    });
+
+    const completedUl = groupDiv.querySelector('.completed-tasks');
+    completedTasksArray.forEach(task => {
+        const li = document.createElement('li');
+        li.className = 'group-item strike-through';
+        li.innerHTML = `
+        <input type="checkbox" checked disabled>
+        <a>${task.TaskName}</a>
+        `;
+        completedUl.appendChild(li);
+    });
+
+    return groupDiv;
 }
 
 /** Allows swap between an all-day task and allowing time input */
@@ -135,4 +134,43 @@ taskForm.addEventListener('submit', async (event) => {
 
 function completeTask(task) {
     window.electronAPI.completeTask(task.TaskId);
+}
+
+function openDropdownMenu(event, listId) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const container = document.getElementById('lists');
+    menu.style.top = `${rect.top}px`;
+    menu.style.left = `${rect.left - 165}px`;
+    menu.style.display = 'block';
+    menu.dataset.listId = listId;
+
+    setTimeout(() => {
+        document.addEventListener('click', closeThreeDots);
+    }, 0);
+}
+
+function closeThreeDots(event) {
+    if (!menu.contains(event.target)) {
+        hideMenu();
+    }
+}
+
+function hideMenu() {
+    menu.style.display = 'none';
+    document.removeEventListener('click', closeThreeDots);
+}
+
+function editList() {
+    console.log(menu.dataset.listId);
+    hideMenu();
+}
+
+function deleteList() {
+    window.electronAPI.deleteList(menu.dataset.listId);
+    hideMenu();
+}
+
+function deleteCompleted() {
+    window.electronAPI.deleteCompleted(menu.dataset.listId);
+    hideMenu();
 }

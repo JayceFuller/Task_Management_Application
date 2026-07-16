@@ -50,20 +50,21 @@ function createTask(formData) {
 /**
  * Delete a task from the database
  * 
- * @param task the task to be deleted
+ * @param {Task} task the task to be deleted
  * @returns the number of rows saved
  */
 function deleteTask(task) {
     const db = new Database(dbPath);
     const sql = db.prepare(`DELETE FROM Task WHERE TaskId = ?`);
     const rows = sql.run(task.TaskId);
+    db.close();
     return rows;
 }
 
 /**
  * Gets all tasks corresponding to a given list
  * 
- * @param list the list item to search by
+ * @param {List} list the list item to search by
  * @returns an array of all tasks matching the list, may be empty
  */
 function getTasksByList(list) {
@@ -76,7 +77,7 @@ function getTasksByList(list) {
 /**
  * Gets all completed tasks corresponding to a given list
  * 
- * @param list the list item to search by
+ * @param {List} list the list item to search by
  * @returns an array of all tasks matching the list, may be empty
  */
 function getCompletedTasksByList(list) {
@@ -89,7 +90,7 @@ function getCompletedTasksByList(list) {
 /**
  * Get a task by a given id
  * 
- * @param taskId the id of the task to be fetched
+ * @param {int} taskId the id of the task to be fetched
  * @returns the task found
  */
 function getTaskById(taskId) {
@@ -102,7 +103,7 @@ function getTaskById(taskId) {
 /**
  * Changes the status of a task to completed
  * 
- * @param task the task item being completed
+ * @param {Task} task the task item being completed
  * @returns the number of rows modified
  */
 function completeTask(task) {
@@ -110,6 +111,19 @@ function completeTask(task) {
     const sql = db.prepare(`UPDATE Task SET IsCompleted = 1 WHERE TaskId = ?`);
     const rows = sql.run(task.TaskId)
     db.close();
+    return rows;
+}
+
+/**
+ * Delete all completed tasks from a given list
+ * 
+ * @param {List} list the list from which to delete tasks
+ * @returns the number of rows deleted
+ */
+function deleteCompleted(list) {
+    const db = new Database(dbPath);
+    const sql = db.prepare(`DELETE FROM Task WHERE IsCompleted = 1 and ListId = ?`);
+    const rows = sql.run(list.ListId);
     return rows;
 }
 
@@ -121,5 +135,6 @@ module.exports = {
     getTasksByList,
     getCompletedTasksByList,
     completeTask,
-    getTaskById
+    getTaskById,
+    deleteCompleted
 }

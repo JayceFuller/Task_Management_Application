@@ -60,9 +60,9 @@ ipcMain.handle('createList', async (event, formData) => {
         return { success: false };
     }
 });
-ipcMain.handle('deleteList', async (event, list) => {
+ipcMain.handle('deleteList', async (event, listId) => {
     try {
-        const rows = listDA.deleteList(list);
+        const rows = listDA.deleteList(listId);
         if (rows > 0) {
             return { success: true };
         }
@@ -131,6 +131,19 @@ ipcMain.handle('deleteTask', async (event, task) => {
     }
     catch (err) {
         console.log('Error in taskDA.deleteTask(): ', err);
+        return { success: false };
+    }
+});
+ipcMain.handle('deleteCompleted', async (event, list) => {
+    try {
+        const rows = taskDA.deleteCompleted(list);
+        if (rows >= 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in taskDA.deleteCompleted(): ', err);
         return { success: false };
     }
 });

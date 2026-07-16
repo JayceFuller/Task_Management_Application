@@ -38,13 +38,14 @@ function createList(formData) {
 /**
  * Delete a list from the database
  * 
- * @param list the list to be deleted
+ * @param {int} listId the id of the list to be deleted
  * @returns the number of rows saved
  */
-function deleteList() {
+function deleteList(listId) {
     const db = new Database(dbPath);
     const sql = db.prepare(`DELETE FROM List WHERE ListId = ?`);
-    const rows = sql.run(list.ListId);
+    const rows = sql.run(listId);
+    db.prepare(`DELETE FROM Task WHERE ListId = ?`).run(listId);
     db.close();
     return rows;
 }

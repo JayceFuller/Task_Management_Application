@@ -13,10 +13,13 @@ const electronAPI = {
     getCompletedTasksByList: (list) => ipcRenderer.invoke('getCompletedTasksByList', list),
     completeTask: (list) => ipcRenderer.invoke('completeTask', list),
     getTaskById: (taskId) => ipcRenderer.invoke('getTaskById', taskId),
+    deleteTask: (taskId) => ipcRenderer.invoke('deleteTask', taskId),
+    deleteCompleted: (list) => ipcRenderer.invoke('deleteCompleted', list),
 
     /** List operations */
     getLists: () => ipcRenderer.invoke('getLists'),
     createList: (formData) => ipcRenderer.invoke('createList', formData),
+    deleteList: (listId) => ipcRenderer.invoke('deleteList', listId),
 
     /** Label operations */
     getLabels: () => ipcRenderer.invoke('getLabels'),
