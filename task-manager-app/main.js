@@ -47,6 +47,16 @@ ipcMain.handle('getLists', () => {
         return [];
     }
 });
+ipcMain.handle('getList', (event, listId) => {
+    try {
+        const list = listDA.getList(listId);
+        return list;
+    }
+    catch (err) {
+        console.log('Error in listDA.getList(): ', err);
+        return null;
+    }
+});
 ipcMain.handle('createList', async (event, formData) => {
     try {
         const rows = listDA.createList(formData);
@@ -70,6 +80,19 @@ ipcMain.handle('deleteList', async (event, listId) => {
     }
     catch (err) {
         console.log('Error in listDA.deleteList(): ', err);
+        return { success: false };
+    }
+});
+ipcMain.handle('renameList', async (event, listName, listId) => {
+    try {
+        const rows = listDA.renameList(listName, listId);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in listDA.renameList(): ', err);
         return { success: false };
     }
 });

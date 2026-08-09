@@ -19,8 +19,10 @@ const electronAPI = {
 
     /** List operations */
     getLists: () => ipcRenderer.invoke('getLists'),
+    getList: (listId) => ipcRenderer.invoke('getList', listId),
     createList: (formData) => ipcRenderer.invoke('createList', formData),
     deleteList: (listId) => ipcRenderer.invoke('deleteList', listId),
+    renameList: (listName, listId) => ipcRenderer.invoke('renameList', listName, listId),
 
     /** Label operations */
     getLabels: () => ipcRenderer.invoke('getLabels'),

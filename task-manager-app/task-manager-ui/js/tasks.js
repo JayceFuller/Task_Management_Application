@@ -1,9 +1,7 @@
-const err = document.getElementById('err');
-const taskForm = document.getElementById('taskForm');
+const taskForm = document.getElementById('task-form');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
-const taskMenu = document.getElementById('three-dots-task');
-const menu = document.getElementById('three-dots-list');
+const taskMenu = document.getElementById('task-list');
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
@@ -194,29 +192,4 @@ function editTask() {
 function deleteTask() {
     window.electronAPI.deleteList(taskMenu.dataset.taskId);
     hideMenuTask();
-}
-
-/** Open edit dropdown for a list */
-function openListDropdownMenu(event, listId) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const container = document.getElementById('lists');
-    menu.style.top = `${ rect.top }px`;
-    menu.style.left = `${ rect.left - 165 }px`;
-    menu.style.display = 'block';
-    menu.dataset.listId = listId;
-
-    setTimeout(() => {
-        document.addEventListener('click', closeThreeDots);
-    }, 0);
-}
-
-/** Close dropdown menu for list */
-function closeThreeDots(event) {
-    if (!menu.contains(event.target)) {
-        hideMenu();
-    }
-}
-function hideMenu() {
-    menu.style.display = 'none';
-    document.removeEventListener('click', closeThreeDots);
 }

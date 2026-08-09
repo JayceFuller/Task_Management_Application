@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
+        <meta charset="UTF-8" />
         <title>Personal Task Manager - All Tasks</title>
+
         <link rel="stylesheet" href="./css/styles.css" />
         <link rel="stylesheet" href="./css/tasksPage.css">
         <script src="./js/tasks.js" defer></script>
@@ -15,14 +16,14 @@
     </header>
 
     <body>
-        <!-- Error Dialog -->
-        <dialog id="err"></dialog>
-
-        <!-- Task Create Form Start -->
-        <dialog id="taskFormDialog">
-            <button type="button" class="close-button" onclick="closeCreateForm()">x</button>
+        <!-- Task Form Start -->
+        <dialog id="task-dialog">
+            <div class="header-bar">
+                <button type="button" class="close-button" onclick="closeCreateForm()" title="Close">x</button>
+            </div>
             <br />
-            <form id="taskForm" class="form-content">
+            
+            <form id="task-form" class="form-content">
                 <div class="form-field">
                     <input id="task-name" type="text" name="task-name" form="taskForm" placeholder="Add task name" required />
                 </div>
@@ -69,34 +70,22 @@
                 <button type="submit" class="button">Save</button>
             </form>
         </dialog>
-        <!-- Task Create Form End -->
+        <!-- Task Form End -->
 
-        <!-- List Create Form Start -->
-        <dialog id="listDialog">
-            <button type="button" class="close-button" onclick="closeListDialog()">x</button>
-            <br />
-            <form id="listForm" class="form-content">
+        <!-- List Form Start -->
+        <dialog id="list-dialog">
+            <div class="header-bar">
+                <button type="button" class="close-button" onclick="closeListDialog()" title="Close">x</button>
+            </div>
+
+            <form id="list-form" class="form-content">
                 <div class="form-field">
                     <input id="list-name" type="text" name="list-name" placeholder="Add list name"/>
                 </div>
                 <button type="submit" class="button">Save</button>
             </form>
         </dialog>
-        <!-- List Create Form End -->
-
-        <!-- List Rename Form Start -->
-         <dialog id="listDialog">
-            <button type="button" class="close-button" onclick="closeListDialog()">x</button>
-            <br />
-            <form id="listForm" class="form-content">
-                <h3>Rename List</h3>
-                <div class="form-field">
-                    <input id="list-name" type="text" name="list-name" placeholder="Add list name"/>
-                </div>
-                <button type="submit" class="button">Save</button>
-            </form>
-        </dialog>
-        <!-- List Rename Form End -->
+        <!-- List Form End -->
 
         <div class="app">
             <h2>All Tasks</h2>
@@ -107,21 +96,14 @@
             <div id="lists"></div>
         </div>
 
-        <ul id="three-dots-list" class="three-dot-menu">
-            <!-- <li>
-                <p class="sort-title">Sort by</p>
-                <span class="sort-opt">Original</span><br/>
-                <span class="sort-opt">Date</span><br/>
-                <span class="sort-opt">Title</span><br/>
-            </li>
-            <hr/> -->
+        <ul id="list-menu" class="menu">
             <li class="menu-button" id="edit-list" onclick="editList()">Rename list</li>
             <li class="menu-button" id="delete-list" onclick="deleteList()">Delete list</li>
             <hr/>
             <li class="menu-button" id="delete-completed" onclick="deleteCompleted()">Delete completed tasks</li>
         </ul>
 
-        <ul id="three-dots-task" class="three-dot-menu">
+        <ul id="task-menu" class="menu">
             <li><a class="menu-button" href="#" id="edit-task" onclick="editTask()">Edit task</a></li>
             <li><a class="menu-button" href="#" id="delete-task" onclick="deleteTask()">Delete task</a></li>
         </ul>

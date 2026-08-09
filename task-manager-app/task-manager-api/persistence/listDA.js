@@ -16,6 +16,20 @@ function getLists() {
 }
 
 /**
+ * Get a single list by id
+ * 
+ * @param {int} listId id of the list to be found
+ * @returns the List object found
+ */
+function getList(listId) {
+    const db = new Database(dbPath);
+    const sql = db.prepare(`SELECT * FROM List WHERE ListId = ?`);
+    const list = sql.get(listId);
+    db.close();
+    return list;
+}
+
+/**
  * Create a new list and save it to the database
  * 
  * @param formData contains all the information to save a list to the database in the format
@@ -45,13 +59,29 @@ function deleteList(listId) {
     const db = new Database(dbPath);
     const sql = db.prepare(`DELETE FROM List WHERE ListId = ?`);
     const rows = sql.run(listId);
-    db.prepare(`DELETE FROM Task WHERE ListId = ?`).run(listId);
+    db.close();
+    return rows;
+}
+
+/**
+ * Renames a given list title
+ * 
+ * @param {string} listName the new name to replace the original list name
+ * @param {int} listId the id of the list to be updated
+ * @returns the number of rows modified
+ */
+function renameList(listName, listId) {
+    const db = new Database(dbPath);
+    const sql = db.prepare(`UPDATE List SET ListName = ? WHERE ListId = ?`);
+    const rows = sql.run(listName, listId);
     db.close();
     return rows;
 }
 
 module.exports = {
     getLists,
+    getList,
     createList,
-    deleteList
+    deleteList,
+    renameList
 }
