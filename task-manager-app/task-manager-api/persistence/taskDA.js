@@ -103,16 +103,31 @@ function getTaskById(taskId) {
 /**
  * Changes the status of a task to completed
  * 
- * @param {Task} task the task item being completed
+ * @param {int} id the id of task item being completed
  * @returns the number of rows modified
  */
-function completeTask(task) {
+function completeTask(id) {
     const db = new Database(dbPath);
     const sql = db.prepare(`UPDATE Task SET IsCompleted = 1 WHERE TaskId = ?`);
-    const rows = sql.run(task.TaskId)
+    const rows = sql.run(id)
     db.close();
     return rows;
 }
+
+/**
+ * Changes the status of a task to not completed
+ * 
+ * @param {int} id the id of the task item
+ * @returns the number of rows modified
+ */
+function uncompleteTask(id) {
+    const db = new Database(dbPath);
+    const sql = db.prepare(`UPDATE Task SET IsCompleted = 0 WHERE TaskId = ?`);
+    const rows = sql.run(id)
+    db.close();
+    return rows;
+}
+
 
 /**
  * Delete all completed tasks from a given list
@@ -135,6 +150,7 @@ module.exports = {
     getTasksByList,
     getCompletedTasksByList,
     completeTask,
+    uncompleteTask,
     getTaskById,
     deleteCompleted
 }

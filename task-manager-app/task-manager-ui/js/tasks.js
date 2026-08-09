@@ -2,13 +2,14 @@ const err = document.getElementById('err');
 const taskForm = document.getElementById('taskForm');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
-const menu = document.getElementById('three-dots');
+const taskMenu = document.getElementById('three-dots-task');
+const menu = document.getElementById('three-dots-list');
 
-/** Create the initial page content */
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
 });
 
+/** Load the page contents */
 async function loadPage() {
     const container = document.getElementById('lists');
     container.innerHTML = '';
@@ -22,9 +23,10 @@ async function loadPage() {
     listElements.forEach(el => container.appendChild(el));
 }
 
+/** Create a list box element for the given list */
 async function createListElement(list) {
-    const tasksArray = /** @type { Task[] } */ await window.electronAPI.getTasksByList(list) || [];
-    const completedTasksArray = /** @type { Task[] } */ await window.electronAPI.getCompletedTasksByList(list) || [];
+    const tasksArray = await window.electronAPI.getTasksByList(list) || [];
+    const completedTasksArray = await window.electronAPI.getCompletedTasksByList(list) || [];
 
     const groupDiv = document.createElement('div');
     groupDiv.className = 'border-container group';
@@ -32,40 +34,53 @@ async function createListElement(list) {
 
     groupDiv.innerHTML = `
         <div class="d-flex-row space-between">
-        <h3>${list.ListName}</h3>
-        <button class="nobkg-button vellip-btn">⋮</button>
+            <h3>${ list.ListName }</h3>
+            <button class="nobkg-button vellip-btn" title="List options">⋮</button>
         </div>
+
+        <button class="add-button">+ Add a task</button>
         <ul class="task-list"></ul>
-        <div class="subheader">Completed (${completedTasksArray.length})</div>
-        <ul class="completed-tasks m0"></ul>
+
+        <details class="subheader">
+            <summary>Completed (${ completedTasksArray.length })</summary>
+            <ul class="completed-tasks"></ul>
+        </details>
     `;
 
     groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => {
-        openDropdownMenu(e, list.ListId);
+        openListDropdownMenu(e, list.ListId);
     });
 
-    const taskListUl = groupDiv.querySelector('.task-list');
+    const taskList = groupDiv.querySelector('.task-list');
     tasksArray.forEach(task => {
         const li = document.createElement('li');
         li.className = 'group-item';
         li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-        <input type="checkbox" class="task-checkbox">
-        <a class="task-link">${task.TaskName}</a>
+        <input type="checkbox" class="task-checkbox" title="Mark completed">
+        <a>${ task.TaskName }</a>
+        <button class="task-btn" title="Task options">⋮</button>
         `;
+
+        li.querySelector('.task-btn').addEventListener('click', (e) => {
+            openDropdownMenu(e, task.taskId);
+        });
         li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
-        taskListUl.appendChild(li);
+        taskList.appendChild(li);
     });
 
-    const completedUl = groupDiv.querySelector('.completed-tasks');
+    const completedList = groupDiv.querySelector('.completed-tasks');
     completedTasksArray.forEach(task => {
         const li = document.createElement('li');
         li.className = 'group-item strike-through';
+        li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-        <input type="checkbox" checked disabled>
-        <a>${task.TaskName}</a>
+        <input type="checkbox" class="task-checkbox" title="Mark uncompleted" checked>
+        <a>${ task.TaskName }</a>
+        <button class="task-btn" title="Task options">⋮</button>
         `;
-        completedUl.appendChild(li);
+        li.querySelector('.task-checkbox').addEventListener('change', () => uncompleteTask(task));
+        completedList.appendChild(li);
     });
 
     return groupDiv;
@@ -84,14 +99,14 @@ allDayCheckbox.addEventListener('change', function() {
 /** Open task creation dialog */
 async function openCreateForm() {
     const listsArray = await window.electronAPI.getLists() || [];
-    const listDropdown = document.getElementById('listSelect');
+    const listDropdown = document.getElementById('list-select');
 
     listsArray.forEach(list => {
         const listOption = document.createElement('option');
         listOption.value = list.ListId;
         listOption.textContent = list.ListName;
         listDropdown.appendChild(listOption);
-    })
+    });
 
     document.getElementById('taskFormDialog').style.display = 'block';
 }
@@ -132,15 +147,61 @@ taskForm.addEventListener('submit', async (event) => {
     }
 });
 
+/** Swaps a task's status to complete, then reloads the page */
 function completeTask(task) {
     window.electronAPI.completeTask(task.TaskId);
+    loadPage();
 }
 
-function openDropdownMenu(event, listId) {
+/** Swaps a task's status to incomplete, then reloads the page */
+function uncompleteTask(task) {
+    window.electronAPI.uncompleteTask(task.TaskId);
+    loadPage();
+}
+
+/** Open edit dropdown for a task */
+function openDropdownMenu(event, taskId) {
     const rect = event.currentTarget.getBoundingClientRect();
     const container = document.getElementById('lists');
-    menu.style.top = `${rect.top}px`;
-    menu.style.left = `${rect.left - 165}px`;
+    taskMenu.style.top = `${ rect.top }px`;
+    taskMenu.style.left = `${ rect.left - 165 }px`;
+    taskMenu.style.display = 'block';
+    taskMenu.dataset.taskId = taskId;
+
+    setTimeout(() => {
+        document.addEventListener('click', closeThreeDotsTask);
+    }, 0);
+}
+
+/** Close dropdown menu for task */
+function closeThreeDotsTask(event) {
+    if (!taskMenu.contains(event.target)) {
+        hideMenuTask();
+    }
+}
+function hideMenuTask() {
+    taskMenu.style.display = 'none';
+    document.removeEventListener('click', closeThreeDotsTask);
+}
+
+/** Handles task editing ability */
+function editTask() {
+    console.log(taskMenu.dataset.taskId);
+    hideMenuTask();
+}
+
+/** Requests to delete a task from the database */
+function deleteTask() {
+    window.electronAPI.deleteList(taskMenu.dataset.taskId);
+    hideMenuTask();
+}
+
+/** Open edit dropdown for a list */
+function openListDropdownMenu(event, listId) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const container = document.getElementById('lists');
+    menu.style.top = `${ rect.top }px`;
+    menu.style.left = `${ rect.left - 165 }px`;
     menu.style.display = 'block';
     menu.dataset.listId = listId;
 
@@ -149,28 +210,13 @@ function openDropdownMenu(event, listId) {
     }, 0);
 }
 
+/** Close dropdown menu for list */
 function closeThreeDots(event) {
     if (!menu.contains(event.target)) {
         hideMenu();
     }
 }
-
 function hideMenu() {
     menu.style.display = 'none';
     document.removeEventListener('click', closeThreeDots);
-}
-
-function editList() {
-    console.log(menu.dataset.listId);
-    hideMenu();
-}
-
-function deleteList() {
-    window.electronAPI.deleteList(menu.dataset.listId);
-    hideMenu();
-}
-
-function deleteCompleted() {
-    window.electronAPI.deleteCompleted(menu.dataset.listId);
-    hideMenu();
 }

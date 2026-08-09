@@ -30,3 +30,21 @@ listForm.addEventListener('submit', async (event) => {
         err.style.display = 'block';
     }
 })
+
+/** Handles list renaming ability */
+function editList() {
+    console.log(menu.dataset.listId);
+    hideMenu();
+}
+
+/** Requests to delete a list from the database */
+function deleteList() {
+    window.electronAPI.deleteList(menu.dataset.listId);
+    hideMenu();
+}
+
+/** Requests to delete all completed tasks for a list from the database */
+function deleteCompleted() {
+    window.electronAPI.deleteCompleted(menu.dataset.listId);
+    hideMenu();
+}

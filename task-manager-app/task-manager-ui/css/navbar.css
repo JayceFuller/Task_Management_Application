@@ -47,3 +47,9 @@
 .dropdown:hover .dropdown-menu {
     display: block;
 }
+
+.button-nav {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 5px;
+}

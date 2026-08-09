@@ -63,9 +63,10 @@ button, input, textarea, select {
     border-style: solid;
     border-color: var(--text-color);
     border-width: 2px;
-    padding: 5px;
+    padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+    height: auto;
 }
 
 /** Styles the horizontal line */
@@ -81,14 +82,6 @@ hr {
 h2 {
     margin: 0;
     font-size: 24px;
-    font-style: var(--font);
-}
-
-/** Styles heading 3 */
-h3 {
-    margin: 0;
-    margin-left: 10px;
-    font-size: 20px;
     font-style: var(--font);
 }
 
@@ -128,10 +121,10 @@ h3 {
     border-radius: 5px;
     padding: 5px;
 }
-.button:hover {
-    background-color: var(--accent-color-hover);
-    color: var(--accent-text-color-hover);
-}
+    .button:hover {
+        background-color: var(--accent-color-hover);
+        color: var(--accent-text-color-hover);
+    }
 
 /** Style close buttons */
 .close-button {
@@ -144,19 +137,20 @@ h3 {
     margin-bottom: 5px;
     float: right;
 }
-.close-button:hover {
-    background-color: var(--accent-color-hover);
-    color: var(--accent-text-color-hover);
-}
+    .close-button:hover {
+        background-color: var(--accent-color-hover);
+        color: var(--accent-text-color-hover);
+    }
 
 /** Style all form content */
 .form-field input {
     margin-bottom: 5px;
     width: 100%;
 }
-.form-field input::placeholder {
-    font-family: var(--font);
-}
+    .form-field input::placeholder {
+        font-family: var(--font);
+    }
+
 .form-field textarea {
     margin-bottom: 3px;
     min-width: 100%;
@@ -196,10 +190,9 @@ dialog {
     text-decoration: none;
     color: var(--text-color);
 }
-
-.group-item a:hover {
-    color: var(--accent-color);
-}
+    .group-item a:hover {
+        color: var(--accent-color);
+    }
 
 .group {
     min-width: 300px;
@@ -210,10 +203,8 @@ dialog {
     flex: row;
     overflow: auto;
     gap: 10px;
-    height: 400px;
     scrollbar-color: var(--accent-color) black;
     scrollbar-width: thin;
-
 }
 
 .m0 {
@@ -238,13 +229,9 @@ ul {
     padding-right: 10px;
     font-size: 14px;
     border-radius: 3px;
-}
-
-.menu-button:hover {
-    background-color: var(--accent-color-hover);
-}
-
-.menu-button a {
-    text-decoration: none;
     color: var(--accent-text-color);
 }
+    .menu-button:hover {
+        color: var(--accent-text-color-hover);
+        background-color: var(--accent-color-hover);
+    }

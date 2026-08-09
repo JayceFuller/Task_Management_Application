@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <title>Personal Task Manager - All Tasks</title>
         <link rel="stylesheet" href="./css/styles.css" />
+        <link rel="stylesheet" href="./css/tasksPage.css">
         <script src="./js/tasks.js" defer></script>
         <script src="./js/lists.js" defer></script>
         <script src="./js/navbar.js"></script>
@@ -52,7 +53,7 @@
 
                 <div class="form-field">
                     <label for="list" class="form-label">List:</label>
-                    <select id="listSelect" name="list" form="taskForm" required></select>
+                    <select id="list-select" name="list" form="taskForm" required></select>
                 </div>
 
                 <div class="form-field">
@@ -83,6 +84,20 @@
         </dialog>
         <!-- List Create Form End -->
 
+        <!-- List Rename Form Start -->
+         <dialog id="listDialog">
+            <button type="button" class="close-button" onclick="closeListDialog()">x</button>
+            <br />
+            <form id="listForm" class="form-content">
+                <h3>Rename List</h3>
+                <div class="form-field">
+                    <input id="list-name" type="text" name="list-name" placeholder="Add list name"/>
+                </div>
+                <button type="submit" class="button">Save</button>
+            </form>
+        </dialog>
+        <!-- List Rename Form End -->
+
         <div class="app">
             <h2>All Tasks</h2>
             <hr />
@@ -92,10 +107,23 @@
             <div id="lists"></div>
         </div>
 
-        <div id="three-dots" class="three-dot-menu">
-            <div class="menu-button"><a href="#" id="edit-list" onclick="editList()">Rename list</a></div>
-            <div class="menu-button"><a href="#" id="delete-list" onclick="deleteList()">Delete list</a></div>
-            <div class="menu-button"><a href="#" id="delete-completed" onclick="deleteCompleted()">Delete completed tasks</a></div>
-        </div>
+        <ul id="three-dots-list" class="three-dot-menu">
+            <!-- <li>
+                <p class="sort-title">Sort by</p>
+                <span class="sort-opt">Original</span><br/>
+                <span class="sort-opt">Date</span><br/>
+                <span class="sort-opt">Title</span><br/>
+            </li>
+            <hr/> -->
+            <li class="menu-button" id="edit-list" onclick="editList()">Rename list</li>
+            <li class="menu-button" id="delete-list" onclick="deleteList()">Delete list</li>
+            <hr/>
+            <li class="menu-button" id="delete-completed" onclick="deleteCompleted()">Delete completed tasks</li>
+        </ul>
+
+        <ul id="three-dots-task" class="three-dot-menu">
+            <li><a class="menu-button" href="#" id="edit-task" onclick="editTask()">Edit task</a></li>
+            <li><a class="menu-button" href="#" id="delete-task" onclick="deleteTask()">Delete task</a></li>
+        </ul>
     </body>
 </html>

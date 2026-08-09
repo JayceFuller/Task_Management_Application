@@ -99,7 +99,6 @@ ipcMain.handle('getOverdueTasks', async () => {
 });
 ipcMain.handle('getTaskById', async (event, taskId) => {
     try {
-        console.log("hello")
         const task = taskDA.getTaskById(taskId);
         return task;
     }
@@ -167,13 +166,23 @@ ipcMain.handle('getCompletedTasksByList', async (event, list) => {
         return [];
     }
 });
-ipcMain.handle('completeTask', async (event, list) => {
+ipcMain.handle('completeTask', async (event, task) => {
     try {
-        const rows = taskDA.completeTask(list);
+        const rows = taskDA.completeTask(task);
         return { success: true };
     }
     catch (err) {
         console.log('Error in taskDA.completeTask(): ', err);
+        return { success: false };
+    }
+});
+ipcMain.handle('uncompleteTask', async (event, task) => {
+    try {
+        const rows = taskDA.uncompleteTask(task);
+        return { success: true };
+    }
+    catch (err) {
+        console.log('Error in taskDA.uncompleteTask(): ', err);
         return { success: false };
     }
 });
