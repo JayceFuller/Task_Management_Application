@@ -19,27 +19,27 @@
         <!-- Task Form Start -->
         <dialog id="task-dialog">
             <div class="header-bar">
-                <button type="button" class="close-button" onclick="closeCreateForm()" title="Close">x</button>
+                <button type="button" class="close-button" onclick="closeTaskDialog()" title="Close">x</button>
             </div>
             <br />
             
             <form id="task-form" class="form-content">
                 <div class="form-field">
-                    <input id="task-name" type="text" name="task-name" form="taskForm" placeholder="Add task name" required />
+                    <input id="task-name" type="text" name="task-name" placeholder="Add task name" required />
                 </div>
 
                 <div class="form-field">
                     <label for="due" class="form-label">Duedate:</label><br/>
-                    <input id="due" type="datetime-local" form="taskForm" name="due" required />
+                    <input id="due" type="datetime-local" name="due" required />
                 </div>
 
                 <div class="d-flex-row">
-                    <input id="all-day" type="checkbox" name="all-day" form="taskForm" />
+                    <input id="all-day" type="checkbox" name="all-day" />
                     <label for="all-day" class="form-label">All Day</label>
                 </div>
 
                 <div class="form-field">
-                    <select id="recurrence" name="recurrence" form="taskForm" required>
+                    <select id="recurrence" name="recurrence" required>
                         <option value="0" selected>Does not recurr</option>
                         <option value="1">Daily</option>
                         <option value="2">Weekly</option>
@@ -49,17 +49,17 @@
                 </div><br/>
 
                 <div class="form-field">
-                    <textarea id="details" name="details" form="taskForm" placeholder="Add description"></textarea>
+                    <textarea id="details" name="details" placeholder="Add description"></textarea>
                 </div>
 
                 <div class="form-field">
                     <label for="list" class="form-label">List:</label>
-                    <select id="list-select" name="list" form="taskForm" required></select>
+                    <select id="list-select" name="list" required></select>
                 </div>
 
                 <div class="form-field">
                     <label for="level" class="form-label">Priority:</label>
-                    <select id="level" name="level" form="taskForm" required>
+                    <select id="level" name="level" required>
                         <option value="0" selected>None</option>
                         <option value="1">!Low</option>
                         <option value="2">!!Medium</option>
@@ -80,7 +80,7 @@
 
             <form id="list-form" class="form-content">
                 <div class="form-field">
-                    <input id="list-name" type="text" name="list-name" placeholder="Add list name"/>
+                    <input id="list-name" type="text" name="list-name" placeholder="Add list name" required />
                 </div>
                 <button type="submit" class="button">Save</button>
             </form>
@@ -90,7 +90,7 @@
         <div class="app">
             <h2>All Tasks</h2>
             <hr />
-            <button class="button" onclick="openCreateForm()">+ Create Task</button>
+            <button class="button" onclick="openTaskDialog()">+ Create Task</button>
             <button class="button" onclick="openListDialog()">+ Create List</button>
             
             <div id="lists"></div>

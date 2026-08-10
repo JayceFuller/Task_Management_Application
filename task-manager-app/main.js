@@ -209,6 +209,19 @@ ipcMain.handle('uncompleteTask', async (event, task) => {
         return { success: false };
     }
 });
+ipcMain.handle('updateTask', async (event, formData, taskId) => {
+    try {
+        const rows = taskDA.updateTask(formData, taskId);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in taskDA.updateTask(): ', err);
+        return { success: false };
+    }
+});
 
 /**********************************************************************************************************
  * Event operations

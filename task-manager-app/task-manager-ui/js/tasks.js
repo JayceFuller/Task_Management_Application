@@ -3,6 +3,7 @@ const taskMenu = document.getElementById('task-menu');
 const taskDialog = document.getElementById('task-dialog');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
+let currentTaskId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
@@ -102,7 +103,6 @@ allDayCheckbox.addEventListener('change', function() {
 async function openTaskDialog(id = null) {
     const listsArray = /** @type { List[] } */ await window.electronAPI.getLists() || [];
     const listDropdown = document.getElementById('list-select');
-
     listsArray.forEach(list => {
         const listOption = document.createElement('option');
         listOption.value = list.ListId;
@@ -110,13 +110,36 @@ async function openTaskDialog(id = null) {
         listDropdown.appendChild(listOption);
     });
 
+    const name = document.getElementById('task-name');
+    const due = document.getElementById('due');
+    const level = document.getElementById('level');
+    const details = document.getElementById('details');
+    const list = document.getElementById('list-select');
+
+    if (id != null) {
+        const task = /**@type { Task }*/await window.electronAPI.getTaskById(id) || null;
+        name.value = task.TaskName;
+        due.value = new Date(task.DueDate);
+        level.value = task.PriorityLevel;
+        details.value = task.TaskDesc;
+        list.value = task.ListId;
+    }
+    else {
+        name.value = '';
+        due.value = '';
+        level.value = 0;
+        details.value = '';
+        list.value = '';
+    }
+
+    currentTaskId = id;
     taskDialog.style.display = 'block';
 }
 
 /**
  * Close the task dialog
  */
-function closeCreateForm() {
+function closeTaskDialog() {
     taskDialog.style.display = 'none';
 }
 
@@ -135,21 +158,23 @@ taskForm.addEventListener('submit', async (e) => {
         level: formData.get('level'),
         list: formData.get('list')
     };
-
     if (taskInfo.allDay !== null) {
         taskInfo.due = new Date(`${dueInput.value}T00:00`).toISOString();
     }
 
-    const isSuccess = await window.electronAPI.createTask(taskInfo);
+    var isSuccess = null;
+    if (currentTaskId == null) {
+        isSuccess = await window.electronAPI.createTask(taskInfo);
+    }
+    else {
+        isSuccess = await window.electronAPI.updateTask(taskInfo, currentTaskId);
+    }
+
     if (isSuccess) {
-        err.style.display = 'none';
+        currentTaskId = null;
         taskForm.reset();
         closeTaskDialog();
         loadPage();
-    }
-    else {
-        err.textContent = 'Save failed, please check inputs for errors and try again';
-        err.style.display = 'block';
     }
 });
 
@@ -221,5 +246,5 @@ function editTask() {
  */
 function deleteTask() {
     hideMenuTask();
-    window.electronAPI.deleteList(taskMenu.dataset.taskId);
+    window.electronAPI.deleteTask(taskMenu.dataset.taskId);
 }

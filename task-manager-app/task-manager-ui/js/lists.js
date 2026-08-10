@@ -13,12 +13,12 @@ async function openListDialog(id = null) {
     if (id != null) {
         const list = /**@type { List }*/await window.electronAPI.getListById(id) || null;
         input.value = list.ListName;
-        currentListId = id;
     }
     else {
         input.value = '';
     }
 
+    currentListId = id;
     listDialog.style.display = 'block';
 }
 
@@ -48,15 +48,10 @@ listForm.addEventListener('submit', async (e) => {
     }
     
     if (isSuccess) {
-        err.style.display = 'none';
         currentListId = null;
         listForm.reset();
         closeListDialog();
         loadPage();
-    }
-    else {
-        err.textContent = 'Save failed, please check inputs for errors and try again';
-        err.style.display = 'block';
     }
 });
 

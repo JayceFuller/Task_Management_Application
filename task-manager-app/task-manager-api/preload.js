@@ -16,6 +16,7 @@ const electronAPI = {
     getTaskById: (taskId) => ipcRenderer.invoke('getTaskById', taskId),
     deleteTask: (taskId) => ipcRenderer.invoke('deleteTask', taskId),
     deleteCompleted: (list) => ipcRenderer.invoke('deleteCompleted', list),
+    updateTask: (formData, taskId) => ipcRenderer.invoke('updateTask', formData, taskId),
 
     /** List operations */
     getLists: () => ipcRenderer.invoke('getLists'),

@@ -36,6 +36,7 @@ function getOverdueTasks() {
  */
 function createTask(formData) {
     const db = new Database(dbPath);
+    console.log(formData)
     const { name, details, due, recurrence, level, list } = formData;
     const sql =  db.prepare(`
         INSERT INTO Task (
@@ -88,14 +89,14 @@ function getCompletedTasksByList(list) {
 }
 
 /**
- * Get a task by a given id
+ * Get a single task by a given id
  * 
  * @param {int} taskId the id of the task to be fetched
  * @returns the task found
  */
 function getTaskById(taskId) {
     const db = new Database(dbPath);
-    const task = db.prepare(`SELECT * FROM Task WHERE TaskId = ?`).all(taskId);
+    const task = db.prepare(`SELECT * FROM Task WHERE TaskId = ?`).get(taskId);
     db.close();
     return new Task(task);
 }
@@ -142,6 +143,23 @@ function deleteCompleted(list) {
     return rows;
 }
 
+function updateTask(formData, taskId) {
+    const db = new Database(dbPath);
+    const { name, details, due, recurrence, level, list } = formData;
+    const sql = `
+        UPDATE Task SET
+            TaskName = ?,
+            TaskDesc = ?,
+            DueDate = ?,
+            PriorityLevel = ?,
+            ListId = ?
+        WHERE TaskId = ?
+    `;
+    const rows = sql.run(name, details, due, level, list, taskId);
+    db.close();
+    return rows;
+}
+
 module.exports = {
     getTodaysTasks,
     getOverdueTasks,
@@ -152,5 +170,6 @@ module.exports = {
     completeTask,
     uncompleteTask,
     getTaskById,
-    deleteCompleted
+    deleteCompleted,
+    updateTask
 }
