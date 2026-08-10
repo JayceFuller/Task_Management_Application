@@ -1,12 +1,37 @@
 const { contextBridge, ipcRenderer } = require("electron");
-const { getTaskByList } = require("./persistence/taskDA");
 
-const API = {
+/** Bridge all API calls from frontend to backend */
+const electronAPI = {
+    quitApp: () => ipcRenderer.invoke("quitApp"),
+    
+    /** Task operations */
     getTodaysTasks: () => ipcRenderer.invoke('getTodaysTasks'),
-    createTask: (formData) => ipcRenderer.send('createTask', formData),
-    createEvent: (formData) => ipcRenderer.send('createEvent', formData),
-    getTaskByList: (label) => ipcRenderer.send('getTaskByList', label),
-    getLabels: () => ipcRenderer.invoke('getLabels')
+    getOverdueTasks: () => ipcRenderer.invoke('getOverdueTasks'),
+    getTodaysEvents: () => ipcRenderer.invoke('getTodaysEvents'),
+    createTask: (formData) => ipcRenderer.invoke('createTask', formData),
+    getTasksByList: (list) => ipcRenderer.invoke('getTasksByList', list),
+    getCompletedTasksByList: (list) => ipcRenderer.invoke('getCompletedTasksByList', list),
+    completeTask: (task) => ipcRenderer.invoke('completeTask', task),
+    uncompleteTask: (task) => ipcRenderer.invoke('uncompleteTask', task),
+    getTaskById: (taskId) => ipcRenderer.invoke('getTaskById', taskId),
+    deleteTask: (taskId) => ipcRenderer.invoke('deleteTask', taskId),
+    deleteCompleted: (list) => ipcRenderer.invoke('deleteCompleted', list),
+    updateTask: (formData, taskId) => ipcRenderer.invoke('updateTask', formData, taskId),
+
+    /** List operations */
+    getLists: () => ipcRenderer.invoke('getLists'),
+    getListById: (listId) => ipcRenderer.invoke('getListById', listId),
+    createList: (formData) => ipcRenderer.invoke('createList', formData),
+    deleteList: (listId) => ipcRenderer.invoke('deleteList', listId),
+    renameList: (listName, listId) => ipcRenderer.invoke('renameList', listName, listId),
+
+    /** Label operations */
+    getLabels: () => ipcRenderer.invoke('getLabels'),
+    createLabel: (formData) => ipcRenderer.invoke('createLabel', formData),
+
+    /** Event operations */
+    createEvent: (formData) => ipcRenderer.invoke('createEvent', formData),
+    getEventByLabel: (label) => ipcRenderer.invoke('getEventByLabel', label)
 }
 
-contextBridge.exposeInMainWorld("api", API);
+contextBridge.exposeInMainWorld("electronAPI", electronAPI);

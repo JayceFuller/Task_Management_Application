@@ -16,54 +16,21 @@
         <div class="app">
             <div>
                 <h2 id="date"></h2>
-                <script>getDateDisplay();</script>
             </div>
             <hr />
 
             <div class="border-container">
                 <h3>Events</h3>
-                <ul id="event-list"></ul>
-                <script>
-                    async function loadEvents() {
-                        try {
-                            const events = await window.api.getTodaysEvents();
-                            const eventEl = document.getElementById('event-list');
-                            eventEl.innerHTML = '';
-                            events.foreach(event => {
-                                const eventItem = document.createElement('li');
-                                eventItem.innerHTML = `${event.name}`;
-                                eventItem.appendChild(eventEl);
-                            })
-                        }
-                        catch (err) {
-                            console.error(`Error loading today's events`);
-                        }
-                    }
-                    loadEvents();
-                </script>
+                <ul id="events"></ul>
             </div>
 
-            <div class="border-container">
+            <div>
                 <h3>Tasks</h3>
-                <ul id="task-list"></ul>
-                <script>
-                    async function loadTasks() {
-                        try {
-                            const tasks = await window.api.getTodaysTasks();
-                            const taskEl = document.getElementById('task-list');
-                            taskEl.innerHTML = '';
-                            tasks.foreach(task => {
-                                const taskItem = document.createElement('li');
-                                taskItem.innerHTML = `${task.name}`;
-                                taskItem.appendChild(taskEl);
-                            })
-                        }
-                        catch (err) {
-                            console.error(`Error loading today's tasks`);
-                        }
-                    }
-                    loadTasks();
-                </script>
+                <div id="overdueContainer" class="border-container">
+                    <h4>OVERDUE:</h4>
+                    <ul id="overdue"></ul>
+                </div>
+                <ul id="tasks"></ul>
             </div>
         </div>
     </body>

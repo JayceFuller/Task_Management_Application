@@ -1,4 +1,4 @@
-/** App display vriables - Edit these to personalize app design! :D */
+/** App display variables - Edit these to personalize app design! :D */
 :root {
     /** 
     * Background of all pages. Note, if switching to solid color, change background-image in the body{} tag
@@ -23,6 +23,12 @@
 
     /** Color for background of hoverable elements like buttons and nav-items */
     --accent-color-hover: #0D6665;
+
+    /** Color of all popup windows, used for forms and error messages */
+    --dialog-color: lightgray;
+
+    /** Color of text in all popup windows, used for forms and error messages */
+    --dialog-text-color: black;
 }
 
 /** Styles the body of the app */
@@ -37,23 +43,24 @@ body {
     font-family: var(--font);
     user-select: none;
     -webkit-app-region: drag;
+    display: flex;
+    flex-direction: column;
 }
 
 * {
   box-sizing: border-box;
 }
-
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
   -webkit-app-region: no-drag;
   cursor: pointer;
 }
 
-/** Sets page margins */
+/** Sets all page margins */
 .app {
     margin: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /** Styles container border */
@@ -61,9 +68,10 @@ select {
     border-style: solid;
     border-color: var(--text-color);
     border-width: 2px;
-    padding: 5px;
+    padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+    height: auto;
 }
 
 /** Styles the horizontal line */
@@ -79,21 +87,36 @@ hr {
 h2 {
     margin: 0;
     font-size: 24px;
-    font-weight: bold;
+    font-style: var(--font);
 }
 
-/** Styles heading 3 */
-h3 {
-    margin: 0;
+/** Styles heading 4 */
+.subheader {
     margin-left: 10px;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 16px;
+    font-style: var(--font);
 }
 
 /** Centers the contents of a container */
 .center-content {
     display: flex;
     justify-content: center;
+}
+
+.d-flex-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.nobkg-button {
+    float: right;
+    background: none;
+    color: var(--text-color);
 }
 
 /** Styles all buttons in the app */
@@ -103,45 +126,125 @@ h3 {
     border-radius: 5px;
     padding: 5px;
 }
-
-.button:hover {
-    background-color: var(--accent-color-hover);
-    color: var(--accent-text-color-hover);
-}
+    .button:hover {
+        background-color: var(--accent-color-hover);
+        color: var(--accent-text-color-hover);
+    }
 
 /** Style close buttons */
 .close-button {
     background-color: var(--accent-color);
     color: var(--accent-text-color);
     border-radius: 5px;
-    padding: 3px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 6px;
+    padding-right: 6px;
+    line-height: 1;
     margin-bottom: 5px;
     float: right;
 }
+    .close-button:hover {
+        background-color: var(--accent-color-hover);
+        color: var(--accent-text-color-hover);
+    }
 
-.close-button:hover {
-    background-color: var(--accent-color-hover);
-    color: var(--accent-text-color-hover);
-}
-
+/** Style all form content */
 .form-field input {
-    margin-bottom: 8px;
+    margin-bottom: 5px;
+    width: 100%;
 }
-
-.form-field input::placeholder {
-    font-family: var(--font);
-}
+    .form-field input::placeholder {
+        font-family: var(--font);
+    }
 
 .form-field textarea {
     margin-bottom: 3px;
+    min-width: 100%;
 }
-
-.form-popup {
-    padding: 5px;
-}
-
 .form-content {
     padding: 10px;
+}
+.form-field select {
+    margin-bottom: 3px;
+}
+.form-label {
+    font-size: 14px;
+}
+.form-content .button {
+    margin-top: 5px;
+}
+
+/** Style window popup elements */
+dialog {
+    display: none;
+    padding: 0;
+    background-color: var(--dialog-color);
+    color: var(--dialog-text-color);
+}
+
+/** Style grouped <li> items */
+.group-item {
+    list-style: none;
+}
+
+/** Add strike through to text */
+.strike-through {
+    text-decoration: line-through;
+}
+
+.group-item a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+    .group-item a:hover {
+        color: var(--accent-color);
+    }
+
+.group {
+    min-width: 300px;
+}
+
+.all-groups {
+    display: flex;
+    flex: 1;
+    flex: row;
+    overflow: auto;
+    gap: 10px;
+    scrollbar-color: var(--accent-color) black;
+    scrollbar-width: thin;
+}
+
+.m0 {
+    margin: 0px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+.menu {
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    display: none; 
+    position: fixed;
+    border-radius: 5px;
+}
+
+.menu-button {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+    border-radius: 3px;
+    color: var(--accent-text-color);
+}
+    .menu-button:hover {
+        color: var(--accent-text-color-hover);
+        background-color: var(--accent-color-hover);
+    }
+
+.header-bar {
+    /* cursor: move; */
+    background-color: var(--accent-color);
+    padding: 3px;
+    height: 25px;
 }

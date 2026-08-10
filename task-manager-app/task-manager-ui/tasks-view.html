@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
+        <meta charset="UTF-8" />
         <title>Personal Task Manager - All Tasks</title>
+
         <link rel="stylesheet" href="./css/styles.css" />
-        <script src="./js/task.js"></script>
+        <link rel="stylesheet" href="./css/tasksPage.css">
+        <script src="./js/tasks.js" defer></script>
+        <script src="./js/lists.js" defer></script>
         <script src="./js/navbar.js"></script>
     </head>
 
@@ -13,51 +16,97 @@
     </header>
 
     <body>
-        <dialog class="form-popup" style="display: none" id="taskForm">
-            <button type="button" class="close-button" onclick="closeTaskForm()">x</button>
+        <!-- Task Form Start -->
+        <dialog id="task-dialog">
+            <div class="header-bar">
+                <button type="button" class="close-button" onclick="closeTaskDialog()" title="Close">x</button>
+            </div>
             <br />
-            <form id="taskForm" class="form-content">
+            
+            <form id="task-form" class="form-content">
                 <div class="form-field">
-                    <input id="name" type="text" name="name" placeholder="Add task name" />
+                    <input id="task-name" type="text" name="task-name" placeholder="Add task name" required />
                 </div>
+
+                <div class="form-field">
+                    <label for="due" class="form-label">Duedate:</label><br/>
+                    <input id="due" type="datetime-local" name="due" required />
+                </div>
+
+                <div class="d-flex-row">
+                    <input id="all-day" type="checkbox" name="all-day" />
+                    <label for="all-day" class="form-label">All Day</label>
+                </div>
+
+                <div class="form-field">
+                    <select id="recurrence" name="recurrence" required>
+                        <option value="0" selected>Does not recurr</option>
+                        <option value="1">Daily</option>
+                        <option value="2">Weekly</option>
+                        <option value="3">Monthly</option>
+                        <option value="4">Annually</option>
+                    </select>
+                </div><br/>
 
                 <div class="form-field">
                     <textarea id="details" name="details" placeholder="Add description"></textarea>
                 </div>
 
                 <div class="form-field">
-                    <label for="due">Duedate:</label><br/>
-                    <input id="due" type="datetime-local" name="due" />
+                    <label for="list" class="form-label">List:</label>
+                    <select id="list-select" name="list" required></select>
                 </div>
 
-                <!-- Make this a dropdown -->
                 <div class="form-field">
-                    <input id="recurrence" type="text" name="recurrence" placeholder="Does not repeat" disabled />
-                </div>
-
-                <!-- Make this a dropdown -->
-                <div class="form-field">
-                    <label for="level">Priority Level:</label><br/>
-                    <input id="level" type="text" name="level" />
-                </div>
-
-                <!-- Make this a dropdown -->
-                <div class="form-field">
-                    <label for="list">Task List:</label><br/>
-                    <input id="list" type="text" name="list" />
+                    <label for="level" class="form-label">Priority:</label>
+                    <select id="level" name="level" required>
+                        <option value="0" selected>None</option>
+                        <option value="1">!Low</option>
+                        <option value="2">!!Medium</option>
+                        <option value="3">!!!High</option>
+                    </select>
                 </div>
 
                 <button type="submit" class="button">Save</button>
             </form>
         </dialog>
+        <!-- Task Form End -->
+
+        <!-- List Form Start -->
+        <dialog id="list-dialog">
+            <div class="header-bar">
+                <button type="button" class="close-button" onclick="closeListDialog()" title="Close">x</button>
+            </div>
+
+            <form id="list-form" class="form-content">
+                <div class="form-field">
+                    <input id="list-name" type="text" name="list-name" placeholder="Add list name" required />
+                </div>
+                <button type="submit" class="button">Save</button>
+            </form>
+        </dialog>
+        <!-- List Form End -->
 
         <div class="app">
             <h2>All Tasks</h2>
             <hr />
-            <button class="button" onclick="openTaskForm()">+ Create Task</button>
-            <button class="button">+ Create List</button>
             
-            <div id="lists"></div>
+            <button class="button" onclick="openListDialog()">+ Create List</button>
+            <button class="button" onclick="openTaskDialog()">+ Create Task</button>
+            
+            <div id="lists" class="lists"></div>
         </div>
+
+        <ul id="list-menu" class="menu">
+            <li class="menu-button" id="edit-list" onclick="editList()">Rename list</li>
+            <li class="menu-button" id="delete-list" onclick="deleteList()">Delete list</li>
+            <hr/>
+            <li class="menu-button" id="delete-completed" onclick="deleteCompleted()">Delete completed tasks</li>
+        </ul>
+
+        <ul id="task-menu" class="menu">
+            <li class="menu-button" id="edit-task" onclick="editTask()">Edit task</li>
+            <li class="menu-button" id="delete-task" onclick="deleteTask()">Delete task</li>
+        </ul>
     </body>
 </html>
