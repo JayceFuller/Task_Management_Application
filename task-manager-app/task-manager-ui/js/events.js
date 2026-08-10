@@ -1,44 +1,58 @@
-const err = document.getElementById('err');
-const eventForm = document.getElementById('eventForm');
-const labelForm = document.getElementById('labelForm');
+const eventForm = document.getElementById('event-form');
+const eventDialog = document.getElementById('event-dialog');
 
-/** Create the initial page content */
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
 });
 
-/** Load all events from the database and display by label */
+/**
+ * Load the page contents
+ */
 async function loadPage() {
-    const labels = await window.electronAPI.getLabels();
-    const labelsArray = Array.isArray(labels) ? labels : (labels.data || []);
     const container = document.getElementById('labels');
     container.innerHTML = '';
+    container.className = 'all-groups';
 
-    await Promise.all(labelsArray.map(async (label) => {
-        const events = await window.electronAPI.getEventByLabel(label);
-        const eventsArray = Array.isArray(events) ? events : (events.data || []);
-
-        const groupDiv = document.createElement('div');
-        groupDiv.className = 'border-container display-group';
-        groupDiv.innerHTML = `<h3>${ label.LabelName } </h3>`;
-
-        const eventList = document.createElement('ul');
-        eventsArray.forEach(event => {
-            const eventItem = document.createElement('li');
-            eventItem.className = 'group-item';
-            const eventName = document.createTextNode(` ${event.EventName}`);
-
-            eventItem.appendChild(eventName);
-            eventList.appendChild(eventItem);
-        });
-        groupDiv.appendChild(eventList);
-        container.appendChild(groupDiv);
+    const labelsArray = /**@type { Label[] }*/ await window.electronAPI.getLabels() || [];
+    const labelElements = await Promise.all(labelsArray.map(async (label) => {
+        return await createLabelElement(label);
     }));
+
+    labelElements.forEach(el => container.appendChild(el));
+}
+
+/**
+ * Create a label element to store events in
+ * @param {Label} label the label for this grouping
+ * @returns the group div to be displayed
+ */
+async function createLabelElement(label) {
+    const eventsArray = /**@type { Event[] }*/ await window.electronAPI.getEventByLabel(label) || [];
+
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'border-container group';
+    groupDiv.dataset.labelId = label.LabelId; 
+    groupDiv.innerHTML = `
+        <h3>${ label.LabelName } </h3>
+
+        <ul class="event-list"></ul>
+    `;
+
+    const eventList = document.querySelector('event-list')
+    eventsArray.forEach(event => {
+        const li = document.createElement('li');
+        li.className = 'group-item';
+        li.dataset.eventId = event.EventId;
+        li.innerHTML = `${ event.EventName }`;
+        eventList.appendChild(li);
+    });
+    
+    return groupDiv;
 }
 
 /** Handle eventForm submission */
-eventForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+eventForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     const formData = new FormData(eventForm);
     const eventInfo = {
         name: formData.get('event-name'),
@@ -52,64 +66,32 @@ eventForm.addEventListener('submit', async (event) => {
 
     const isSuccess = await window.electronAPI.createEvent(eventInfo);
     if (isSuccess) {
-        err.style.display = 'none';
-        labelForm.reset();
+        eventForm.reset();
         closeEventDialog();
         loadPage();
     }
-    else {
-        err.textContent = 'Save failed, please check inputs for errors and try again';
-        err.style.display = 'block';
-    }
 });
 
-/** Open event creation dialog */
+/**
+ * Open the event dialog for editing and creation
+ */
 async function openEventDialog() {
-    document.getElementById('eventDialog').style.display = 'block';
-    const labels = await window.electronAPI.getLabels();
-    const labelsArray = Array.isArray(labels) ? labels : (labels.data || []);
-    const labelsDropdown = document.getElementById('labelSelect');
-
+    const labelsArray = /**@type { Label[] }*/ await window.electronAPI.getLabels() || [];
+    const labelsDropdown = document.getElementById('label-select');
+    labelsDropdown.innerHTML = '';
     labelsArray.forEach(label => {
         const labelOption = document.createElement('option');
         labelOption.value = label.LabelId;
         labelOption.textContent = label.LabelName;
         labelsDropdown.appendChild(labelOption);
-    })
+    });
+
+    eventDialog.style.display = 'block';
 }
 
-/** Close event creation dialog */
+/**
+ * Close event dialog
+ */
 function closeEventDialog() {
-    document.getElementById('eventDialog').style.display = 'none';
+    eventDialog.style.display = 'none';
 }
-
-/** Open label creation dialog */
-function openLabelDialog() {
-    document.getElementById('labelDialog').style.display = 'block';
-}
-
-/** Close label creation dialog */
-function closeLabelDialog() {
-    document.getElementById('labelDialog').style.display = 'none';
-}
-
-/** Handle label form submission */
-labelForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const formData = new FormData(labelForm);
-    const labelInfo = {
-        name: formData.get('label-name')
-    }
-
-    const isSuccess = await window.electronAPI.createLabel(labelInfo);
-    if (isSuccess) {
-        err.style.display = 'none';
-        labelForm.reset();
-        closeLabelDialog();
-        loadPage();
-    }
-    else {
-        err.textContent = 'Save failed, please check inputs for errors and try again';
-        err.style.display = 'block';
-    }
-})

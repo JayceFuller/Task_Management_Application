@@ -28,6 +28,7 @@ async function loadPage() {
 /** 
  * Creates a list box element for the given list object
  * @param {List} list the list to create a display box for
+ * @returns the group div to be displayed
  */
 async function createListElement(list) {
     const tasksArray = /**@type { Task[] }*/ await window.electronAPI.getTasksByList(list) || [];

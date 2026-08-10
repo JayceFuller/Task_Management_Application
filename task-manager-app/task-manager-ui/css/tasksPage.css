@@ -85,11 +85,6 @@ p {
         background-color: var(--accent-color-hover);
     }
 
-hr {
-    border: 1px lightgray solid;
-    margin: 5px 0px;
-}
-
 .sort-title {
     font-size: 13px;
 }

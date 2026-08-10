@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>Personal Task Manager - Upcoming Events</title>
+        <meta charset="UTF-8" />
+        <title>Personal Task Manager - All Events</title>
+
         <link rel="stylesheet" href="./css/styles.css" />
         <script src="./js/events.js" defer></script>
-        <script src="./js/navbar.js"></script>
+        <script src="./js/navbar.js" defer></script>
     </head>
 
     <header>
-        <div id="navbar"></div>
+        <nav-bar></nav-bar>
     </header>
 
     <body>
-        <!-- Error Dialog -->
-        <dialog id="err"></dialog>
-
-        <!-- Event Create Form Start -->
-        <dialog id="eventDialog">
+        <!-- Event Form Start -->
+        <dialog id="event-dialog">
             <button type="button" class="close-button" onclick="closeEventDialog()">x</button>
             <br />
-            <form id="eventForm" class="form-content">
+            <form id="event-form" class="form-content">
                 <div class="form-field">
                     <input id="event-name" type="text" name="event-name" placeholder="Add event name" required />
                 </div>
@@ -41,7 +39,7 @@
                 </div>
 
                 <div class="form-field">
-                    <select id="recurrence" name="recurrence" form="eventForm" required>
+                    <select id="recurrence" name="recurrence" required>
                         <option value="0" selected>Does not recurr</option>
                         <option value="1">Daily</option>
                         <option value="2">Weekly</option>
@@ -52,7 +50,7 @@
 
                 <div class="form-field">
                     <label for="label" class="form-label">Label:</label>
-                    <select id="labelSelect" name="label" form="eventForm" required></select>
+                    <select id="label-select" name="label" required></select>
                 </div>
 
                 <button type="submit" class="button">Save</button>
@@ -61,12 +59,12 @@
         <!-- Event Create Form End -->
 
         <!-- Label Create Form Start -->
-        <dialog id="labelDialog">
+        <dialog id="label-dialog">
             <button type="button" class="close-button" onclick="closeLabelDialog()">x</button>
             <br />
-            <form id="labelForm" class="form-content">
+            <form id="label-form" class="form-content">
                 <div class="form-field">
-                    <input id="label-name" type="text" name="label-name" placeholder="Add label name"/>
+                    <input id="label-name" type="text" name="label-name" placeholder="Add label name" required />
                 </div>
                 <button type="submit" class="button">Save</button>
             </form>
@@ -76,10 +74,11 @@
         <div class="app">
             <h2>Upcoming Events</h2>
             <hr />
+
             <button class="button" onclick="openEventDialog()">+ Create Event</button>
             <button class="button" onclick="openLabelDialog()">+ Create Label</button>
             
-            <div id="labels"></div>
+            <div id="labels" class="labels"></div>
         </div>
     </body>
 </html>

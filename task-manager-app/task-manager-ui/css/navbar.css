@@ -1,6 +1,7 @@
 /** Overall navbar design */
 .nav {
     display: flex;
+    justify-content: center;
     list-style: none;
     padding: 5px;
     padding-left: 10px;
@@ -14,11 +15,10 @@
 
 /** Styles the individual nav links */
 .nav-item {
-    padding: 5px 10px;
-    line-height: 22px;
+    padding: 8px 15px;
+    background-color: var(--accent-color);
 }
 .nav a {
-    border-radius: 5px;
     color: var(--accent-text-color);
     text-decoration: none;
     cursor: pointer;
@@ -50,6 +50,7 @@
 
 .button-nav {
     display: flex;
-    border: 1px solid black;
-    border-radius: 5px;
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: var(--accent-text-color);
 }
