@@ -146,7 +146,7 @@ function deleteCompleted(list) {
 function updateTask(formData, taskId) {
     const db = new Database(dbPath);
     const { name, details, due, recurrence, level, list } = formData;
-    const sql = `
+    const sql = db.prepare(`
         UPDATE Task SET
             TaskName = ?,
             TaskDesc = ?,
@@ -154,7 +154,7 @@ function updateTask(formData, taskId) {
             PriorityLevel = ?,
             ListId = ?
         WHERE TaskId = ?
-    `;
+    `);
     const rows = sql.run(name, details, due, level, list, taskId);
     db.close();
     return rows;

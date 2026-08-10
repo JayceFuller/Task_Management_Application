@@ -42,7 +42,7 @@ async function createListElement(list) {
             <button class="nobkg-button vellip-btn" title="List options">⋮</button>
         </div>
 
-        <button class="add-button">+ Add a task</button>
+        <button class="add-button" title="Add a task">+ Add a task</button>
         <ul class="task-list"></ul>
 
         <details class="subheader">
@@ -51,6 +51,7 @@ async function createListElement(list) {
         </details>
     `;
     groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => openListMenu(e, list.ListId));
+    groupDiv.querySelector('.add-button').addEventListener('click', () => openTaskDialog(null, list.ListId))
 
     const taskList = groupDiv.querySelector('.task-list');
     tasksArray.forEach(task => {
@@ -100,9 +101,10 @@ allDayCheckbox.addEventListener('change', function() {
  * Open task dialog for editing and creation. Gets all current lists for dropdown input
  * @param {any} id the id of the task currently being edited, null if it is a new task
  */
-async function openTaskDialog(id = null) {
+async function openTaskDialog(id = null, listId = null) {
     const listsArray = /** @type { List[] } */ await window.electronAPI.getLists() || [];
     const listDropdown = document.getElementById('list-select');
+    listDropdown.innerHTML = '';
     listsArray.forEach(list => {
         const listOption = document.createElement('option');
         listOption.value = list.ListId;
@@ -129,6 +131,12 @@ async function openTaskDialog(id = null) {
         due.value = '';
         level.value = 0;
         details.value = '';
+    }
+
+    if (listId != null) {
+        list.value = listId;
+    }
+    else {
         list.value = '';
     }
 
@@ -238,7 +246,7 @@ function hideTaskMenu() {
  */
 function editTask() {
     hideTaskMenu();
-    openTaskDialog(taskMenu.dataset.taskId);
+    openTaskDialog(taskMenu.dataset.taskId, null);
 }
 
 /**

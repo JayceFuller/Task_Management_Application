@@ -5,7 +5,6 @@
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    height: auto;
 }
 
 .add-button {
@@ -93,4 +92,8 @@ hr {
 
 .sort-title {
     font-size: 13px;
+}
+
+.lists {
+    flex: 1;
 }

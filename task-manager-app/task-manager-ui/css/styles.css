@@ -43,6 +43,8 @@ body {
     font-family: var(--font);
     user-select: none;
     -webkit-app-region: drag;
+    display: flex;
+    flex-direction: column;
 }
 
 * {
@@ -56,6 +58,9 @@ button, input, textarea, select {
 /** Sets all page margins */
 .app {
     margin: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /** Styles container border */
@@ -200,6 +205,7 @@ dialog {
 
 .all-groups {
     display: flex;
+    flex: 1;
     flex: row;
     overflow: auto;
     gap: 10px;
