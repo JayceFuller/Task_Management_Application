@@ -1,19 +1,22 @@
 const taskForm = document.getElementById('task-form');
+const taskMenu = document.getElementById('task-menu');
+const taskDialog = document.getElementById('task-dialog');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
-const taskMenu = document.getElementById('task-list');
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
 });
 
-/** Load the page contents */
+/** 
+ * Load the page contents
+ */
 async function loadPage() {
     const container = document.getElementById('lists');
     container.innerHTML = '';
     container.className = 'all-groups';
 
-    const listsArray = /** @type { List[] } */ await window.electronAPI.getLists() || [];
+    const listsArray = /**@type { List[] }*/ await window.electronAPI.getLists() || [];
     const listElements = await Promise.all(listsArray.map(async (list) => {
         return await createListElement(list);
     }));
@@ -21,15 +24,17 @@ async function loadPage() {
     listElements.forEach(el => container.appendChild(el));
 }
 
-/** Create a list box element for the given list */
+/** 
+ * Creates a list box element for the given list object
+ * @param {List} list the list to create a display box for
+ */
 async function createListElement(list) {
-    const tasksArray = await window.electronAPI.getTasksByList(list) || [];
-    const completedTasksArray = await window.electronAPI.getCompletedTasksByList(list) || [];
+    const tasksArray = /**@type { Task[] }*/ await window.electronAPI.getTasksByList(list) || [];
+    const completedArray = /**@type { Task[] }*/ await window.electronAPI.getCompletedTasksByList(list) || [];
 
     const groupDiv = document.createElement('div');
     groupDiv.className = 'border-container group';
     groupDiv.dataset.listId = list.ListId; 
-
     groupDiv.innerHTML = `
         <div class="d-flex-row space-between">
             <h3>${ list.ListName }</h3>
@@ -40,14 +45,11 @@ async function createListElement(list) {
         <ul class="task-list"></ul>
 
         <details class="subheader">
-            <summary>Completed (${ completedTasksArray.length })</summary>
+            <summary>Completed (${ completedArray.length })</summary>
             <ul class="completed-tasks"></ul>
         </details>
     `;
-
-    groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => {
-        openListDropdownMenu(e, list.ListId);
-    });
+    groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => openListMenu(e, list.ListId));
 
     const taskList = groupDiv.querySelector('.task-list');
     tasksArray.forEach(task => {
@@ -55,27 +57,24 @@ async function createListElement(list) {
         li.className = 'group-item';
         li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-        <input type="checkbox" class="task-checkbox" title="Mark completed">
-        <a>${ task.TaskName }</a>
-        <button class="task-btn" title="Task options">⋮</button>
+            <input type="checkbox" class="task-checkbox" title="Mark completed">
+            <a>${ task.TaskName }</a>
+            <button class="task-btn" title="Task options">⋮</button>
         `;
-
-        li.querySelector('.task-btn').addEventListener('click', (e) => {
-            openDropdownMenu(e, task.taskId);
-        });
+        li.querySelector('.task-btn').addEventListener('click', (e) => openTaskMenu(e, task.TaskId));
         li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
         taskList.appendChild(li);
     });
 
     const completedList = groupDiv.querySelector('.completed-tasks');
-    completedTasksArray.forEach(task => {
+    completedArray.forEach(task => {
         const li = document.createElement('li');
         li.className = 'group-item strike-through';
         li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-        <input type="checkbox" class="task-checkbox" title="Mark uncompleted" checked>
-        <a>${ task.TaskName }</a>
-        <button class="task-btn" title="Task options">⋮</button>
+            <input type="checkbox" class="task-checkbox" title="Mark uncompleted" checked>
+            <a>${ task.TaskName }</a>
+            <button class="task-btn" title="Task options">⋮</button>
         `;
         li.querySelector('.task-checkbox').addEventListener('change', () => uncompleteTask(task));
         completedList.appendChild(li);
@@ -84,7 +83,9 @@ async function createListElement(list) {
     return groupDiv;
 }
 
-/** Allows swap between an all-day task and allowing time input */
+/**
+ * Swap between task due date input being date only or date time
+ */
 allDayCheckbox.addEventListener('change', function() {
     if (this.checked) {
         dueInput.type = 'date';
@@ -94,9 +95,12 @@ allDayCheckbox.addEventListener('change', function() {
     }
 });
 
-/** Open task creation dialog */
-async function openCreateForm() {
-    const listsArray = await window.electronAPI.getLists() || [];
+/**
+ * Open task dialog for editing and creation. Gets all current lists for dropdown input
+ * @param {any} id the id of the task currently being edited, null if it is a new task
+ */
+async function openTaskDialog(id = null) {
+    const listsArray = /** @type { List[] } */ await window.electronAPI.getLists() || [];
     const listDropdown = document.getElementById('list-select');
 
     listsArray.forEach(list => {
@@ -106,17 +110,21 @@ async function openCreateForm() {
         listDropdown.appendChild(listOption);
     });
 
-    document.getElementById('taskFormDialog').style.display = 'block';
+    taskDialog.style.display = 'block';
 }
 
-/** Close task creation dialog */
+/**
+ * Close the task dialog
+ */
 function closeCreateForm() {
-    document.getElementById('taskFormDialog').style.display = 'none';
+    taskDialog.style.display = 'none';
 }
 
-/** Handle taskForm submission */
-taskForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+/**
+ * Handle the submission request to edit or create a task
+ */
+taskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     const formData = new FormData(taskForm)
     const taskInfo = {
         name: formData.get('task-name'),
@@ -136,7 +144,7 @@ taskForm.addEventListener('submit', async (event) => {
     if (isSuccess) {
         err.style.display = 'none';
         taskForm.reset();
-        closeCreateForm();
+        closeTaskDialog();
         loadPage();
     }
     else {
@@ -145,51 +153,73 @@ taskForm.addEventListener('submit', async (event) => {
     }
 });
 
-/** Swaps a task's status to complete, then reloads the page */
+/**
+ * Request to swap a task's status to complete. If successful, reload the page
+ */
 function completeTask(task) {
-    window.electronAPI.completeTask(task.TaskId);
-    loadPage();
+    const success = window.electronAPI.completeTask(task.TaskId);
+    if (success) {
+        loadPage();
+    }
 }
 
-/** Swaps a task's status to incomplete, then reloads the page */
+/**
+ * Request to swap a task's status to incomplete. If successful, reload the page
+ */
 function uncompleteTask(task) {
-    window.electronAPI.uncompleteTask(task.TaskId);
-    loadPage();
+    const success = window.electronAPI.uncompleteTask(task.TaskId);
+    if (success) {
+        loadPage();
+    }
 }
 
-/** Open edit dropdown for a task */
-function openDropdownMenu(event, taskId) {
-    const rect = event.currentTarget.getBoundingClientRect();
+/**
+ * Open the task menu options for the selected task. Sets an event listener to check if the user
+ * clicks outside the menu area
+ */
+function openTaskMenu(e, taskId) {
+    const rect = e.currentTarget.getBoundingClientRect();
     const container = document.getElementById('lists');
     taskMenu.style.top = `${ rect.top }px`;
-    taskMenu.style.left = `${ rect.left - 165 }px`;
+    taskMenu.style.left = `${ rect.left - 80 }px`;
     taskMenu.style.display = 'block';
     taskMenu.dataset.taskId = taskId;
 
     setTimeout(() => {
-        document.addEventListener('click', closeThreeDotsTask);
+        document.addEventListener('click', taskMenuListener);
     }, 0);
 }
 
-/** Close dropdown menu for task */
-function closeThreeDotsTask(event) {
+/**
+ * Handles the task menu event listener to check if a user clicks outside the menu. If they do,
+ * hide the menu
+ */
+function taskMenuListener(event) {
     if (!taskMenu.contains(event.target)) {
-        hideMenuTask();
+        hideTaskMenu();
     }
 }
-function hideMenuTask() {
+
+/**
+ * Hide the task menu
+ */
+function hideTaskMenu() {
     taskMenu.style.display = 'none';
-    document.removeEventListener('click', closeThreeDotsTask);
+    document.removeEventListener('click', taskMenuListener);
 }
 
-/** Handles task editing ability */
+/**
+ * Open the task dialog for editing and send over the selected task's id
+ */
 function editTask() {
-    console.log(taskMenu.dataset.taskId);
-    hideMenuTask();
+    hideTaskMenu();
+    openTaskDialog(taskMenu.dataset.taskId);
 }
 
-/** Requests to delete a task from the database */
+/**
+ * Request to delete the selected task from the database
+ */
 function deleteTask() {
-    window.electronAPI.deleteList(taskMenu.dataset.taskId);
     hideMenuTask();
+    window.electronAPI.deleteList(taskMenu.dataset.taskId);
 }

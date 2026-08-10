@@ -47,13 +47,13 @@ ipcMain.handle('getLists', () => {
         return [];
     }
 });
-ipcMain.handle('getList', (event, listId) => {
+ipcMain.handle('getListById', (event, listId) => {
     try {
-        const list = listDA.getList(listId);
+        const list = listDA.getListById(listId);
         return list;
     }
     catch (err) {
-        console.log('Error in listDA.getList(): ', err);
+        console.log('Error in listDA.getListById(): ', err);
         return null;
     }
 });

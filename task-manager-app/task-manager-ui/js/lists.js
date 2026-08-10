@@ -1,5 +1,6 @@
 const listForm = document.getElementById('list-form');
 const listMenu = document.getElementById('list-menu');
+const listDialog = document.getElementById('list-dialog');
 let currentListId = null;
 
 /** 
@@ -7,25 +8,25 @@ let currentListId = null;
  * @param {any} id the id of the current list to edit, or null if it is a new list
  */
 async function openListDialog(id = null) {
-    const dialog = document.getElementById('list-dialog');
     const input = document.getElementById('list-name');
 
     if (id != null) {
-        const list = /**@type { List }*/await window.electronAPI.getList(id) || null;
+        const list = /**@type { List }*/await window.electronAPI.getListById(id) || null;
         input.value = list.ListName;
         currentListId = id;
     }
     else {
         input.value = '';
     }
-    dialog.style.display = 'block';
+
+    listDialog.style.display = 'block';
 }
 
 /**
  * Close the list dialog for editing or creation
  */
 function closeListDialog() {
-    document.getElementById('list-dialog').style.display = 'none';
+    listDialog.style.display = 'none';
 }
 
 /**
@@ -57,7 +58,42 @@ listForm.addEventListener('submit', async (e) => {
         err.textContent = 'Save failed, please check inputs for errors and try again';
         err.style.display = 'block';
     }
-})
+});
+
+/** 
+ * Open the list menu options for the selected list. Sets an event listener to check if the user
+ * clicks outside the menu area
+ */
+function openListMenu(e, listId) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const container = document.getElementById('lists');
+    listMenu.style.top = `${ rect.top }px`;
+    listMenu.style.left = `${ rect.left - 165 }px`;
+    listMenu.style.display = 'block';
+    listMenu.dataset.listId = listId;
+
+    setTimeout(() => {
+        document.addEventListener('click', listMenuListener);
+    }, 0);
+}
+
+/**
+ * Handles the list menu event listener to check if a user clicks outside the menu. If they do,
+ * hide the menu
+ */
+function listMenuListener(e) {
+    if (!listMenu.contains(e.target)) {
+        hideListMenu();
+    }
+}
+
+/**
+ * Hides the list menu
+ */
+function hideListMenu() {
+    listMenu.style.display = 'none';
+    document.removeEventListener('click', listMenuListener);
+}
 
 /**
  * Open the list dialog for editing and send over the selected list's id
@@ -81,36 +117,4 @@ function deleteList() {
 function deleteCompleted() {
     hideListMenu();
     window.electronAPI.deleteCompleted(listMenu.dataset.listId);
-}
-
-/**
- * Hides the list editing menu
- */
-function hideListMenu() {
-    listMenu.style.display = 'none';
-    document.removeEventListener('click', listMenuListener);
-}
-
-/** Open edit dropdown for a list */
-function openListDropdownMenu(e, listId) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const container = document.getElementById('lists');
-    listMenu.style.top = `${ rect.top }px`;
-    listMenu.style.left = `${ rect.left - 165 }px`;
-    listMenu.style.display = 'block';
-    listMenu.dataset.listId = listId;
-
-    setTimeout(() => {
-        document.addEventListener('click', listMenuListener);
-    }, 0);
-}
-
-/**
- * Handles the list menu event listener to check if a user clicks outside the menu. If they do,
- * hide the menu.
- */
-function listMenuListener(e) {
-    if (!listMenu.contains(e.target)) {
-        hideListMenu();
-    }
 }

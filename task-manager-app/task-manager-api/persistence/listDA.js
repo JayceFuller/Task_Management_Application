@@ -21,7 +21,7 @@ function getLists() {
  * @param {int} listId id of the list to be found
  * @returns the List object found
  */
-function getList(listId) {
+function getListById(listId) {
     const db = new Database(dbPath);
     const sql = db.prepare(`SELECT * FROM List WHERE ListId = ?`);
     const list = sql.get(listId);
@@ -80,7 +80,7 @@ function renameList(listName, listId) {
 
 module.exports = {
     getLists,
-    getList,
+    getListById,
     createList,
     deleteList,
     renameList
