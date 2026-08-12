@@ -226,14 +226,14 @@ ipcMain.handle('updateTask', async (event, formData, taskId) => {
 /**********************************************************************************************************
  * Event operations
  *********************************************************************************************************/
-ipcMain.handle('getTodaysEvents', () => {
+ipcMain.handle('getTodaysEvents', async () => {
     try {
         const data = eventDA.getTodaysEvents();
-        return { success: true, data: data };
+        return data;
     }
     catch (err) {
         console.log('Error in eventDA.getTodaysEvents(): ', err);
-        return { success: false };
+        return [];
     }
 });
 ipcMain.handle('createEvent', async (event, formData) => {
@@ -255,11 +255,11 @@ ipcMain.handle('deleteEvent', () => {
 ipcMain.handle('getEventByLabel', async (event, label) => {
     try {
         const events = eventDA.getEventByLabel(label);
-        return { success: true, data: events };
+        return events;
     }
     catch (err) {
         console.log('Error in eventDA.getEventByLabel(): ', err);
-        return { success: false, data: [] };
+        return [];
     }
 });
 
@@ -269,11 +269,11 @@ ipcMain.handle('getEventByLabel', async (event, label) => {
 ipcMain.handle('getLabels', () => {
     try {
         const labels = labelDA.getLabels();
-        return { success: true, data: labels };
+        return labels;
     }
     catch (err) {
         console.log('Error in labelDA.getLabels(): ', err);
-        return { success: false };
+        return [];
     }
 });
 ipcMain.handle('createLabel', (event, formData) => {

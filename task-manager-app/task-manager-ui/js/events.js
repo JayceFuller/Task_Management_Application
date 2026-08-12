@@ -38,7 +38,7 @@ async function createLabelElement(label) {
         <ul class="event-list"></ul>
     `;
 
-    const eventList = document.querySelector('event-list')
+    const eventList = groupDiv.querySelector('.event-list')
     eventsArray.forEach(event => {
         const li = document.createElement('li');
         li.className = 'group-item';

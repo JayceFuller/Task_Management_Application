@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>Personal Task Manager - Today's Tasks</title>
+        <meta charset="UTF-8" />
+        <title>Personal Task Manager | Today</title>
+
         <link rel="stylesheet" href="./css/styles.css" />
-        <script src="./js/home.js"></script>
+        <script src="./js/home.js" defer></script>
         <script src="./js/navbar.js" defer></script>
     </head>
 
@@ -19,15 +20,14 @@
             </div>
             <hr />
 
-            <div class="border-container">
-                <h3>Events</h3>
+            <div>
                 <ul id="events"></ul>
             </div>
 
             <div>
                 <h3>Tasks</h3>
-                <div id="overdueContainer" class="border-container">
-                    <h4>OVERDUE:</h4>
+                <div id="overdueContainer" class="warning-container">
+                    <h4>OVERDUE</h4>
                     <ul id="overdue"></ul>
                 </div>
                 <ul id="tasks"></ul>

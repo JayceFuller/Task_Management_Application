@@ -30,6 +30,7 @@ const electronAPI = {
     createLabel: (formData) => ipcRenderer.invoke('createLabel', formData),
 
     /** Event operations */
+    getTodaysEvents: () => ipcRenderer.invoke('getTodaysEvents'),
     createEvent: (formData) => ipcRenderer.invoke('createEvent', formData),
     getEventByLabel: (label) => ipcRenderer.invoke('getEventByLabel', label)
 }
