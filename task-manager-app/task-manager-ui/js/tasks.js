@@ -62,9 +62,9 @@ async function createListElement(list) {
         li.innerHTML = `
             <input type="checkbox" class="task-checkbox" title="Mark completed">
             <a>${ task.TaskName }</a>
-            <button class="task-btn" title="Task options">⋮</button>
+            <button class="opt-btn" title="Task options">⋮</button>
         `;
-        li.querySelector('.task-btn').addEventListener('click', (e) => openTaskMenu(e, task.TaskId));
+        li.querySelector('.opt-btn').addEventListener('click', (e) => openTaskMenu(e, task.TaskId));
         li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
         taskList.appendChild(li);
     });
@@ -77,7 +77,6 @@ async function createListElement(list) {
         li.innerHTML = `
             <input type="checkbox" class="task-checkbox" title="Mark uncompleted" checked>
             <a>${ task.TaskName }</a>
-            <button class="task-btn" title="Task options">⋮</button>
         `;
         li.querySelector('.task-checkbox').addEventListener('change', () => uncompleteTask(task));
         completedList.appendChild(li);
@@ -132,13 +131,13 @@ async function openTaskDialog(id = null, listId = null) {
         due.value = '';
         level.value = 0;
         details.value = '';
-    }
 
-    if (listId != null) {
-        list.value = listId;
-    }
-    else {
-        list.value = '';
+        if (listId != null) {
+            list.value = listId;
+        }
+        else {
+            list.value = '';
+        }
     }
 
     currentTaskId = id;
@@ -253,7 +252,8 @@ function editTask() {
 /**
  * Request to delete the selected task from the database
  */
-function deleteTask() {
-    hideMenuTask();
-    window.electronAPI.deleteTask(taskMenu.dataset.taskId);
+async function deleteTask() {
+    hideTaskMenu();
+    await window.electronAPI.deleteTask(taskMenu.dataset.taskId);
+    loadPage();
 }

@@ -31,8 +31,11 @@ const electronAPI = {
 
     /** Event operations */
     getTodaysEvents: () => ipcRenderer.invoke('getTodaysEvents'),
+    getEventById: (eventId) => ipcRenderer.invoke('getEventById', eventId),
     createEvent: (formData) => ipcRenderer.invoke('createEvent', formData),
-    getEventByLabel: (label) => ipcRenderer.invoke('getEventByLabel', label)
+    getEventByLabel: (label) => ipcRenderer.invoke('getEventByLabel', label),
+    deleteEvent: (eventId) => ipcRenderer.invoke('deleteEvent', eventId),
+    updateEvent: (formData, eventId) => ipcRenderer.invoke('updateEvent', formData, eventId)
 }
 
 contextBridge.exposeInMainWorld("electronAPI", electronAPI);

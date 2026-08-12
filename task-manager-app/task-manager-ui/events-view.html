@@ -5,6 +5,7 @@
         <title>Personal Task Manager | All Events</title>
 
         <link rel="stylesheet" href="./css/styles.css" />
+        <link rel="stylesheet" href="./css/tasksPage.css" />
         <script src="./js/events.js" defer></script>
         <script src="./js/label.js" defer></script>
         <script src="./js/navbar.js" defer></script>
@@ -73,13 +74,25 @@
         <!-- Label Create Form End -->
 
         <div class="app">
-            <h2>Upcoming Events</h2>
+            <h1>All Events</h1>
             <hr />
 
-            <button class="button" onclick="openEventDialog()">+ Create Event</button>
-            <button class="button" onclick="openLabelDialog()">+ Create Label</button>
+            <div class="d-flex-row">
+                <button class="button" onclick="openEventDialog()">+ Create Event</button>
+                <button class="button" onclick="openLabelDialog()">+ Create Label</button>
+            </div>
             
             <div id="labels" class="labels"></div>
         </div>
+
+        <ul id="label-menu" class="menu">
+            <li class="menu-button" id="edit-label" onclick="editLabel()">Rename label</li>
+            <li class="menu-button" id="delete-label" onclick="deleteLabel()">Delete label</li>
+        </ul>
+
+        <ul id="event-menu" class="menu">
+            <li class="menu-button" id="edit-event" onclick="editEvent()">Edit event</li>
+            <li class="menu-button" id="delete-event" onclick="deleteEvent()">Delete event</li>
+        </ul>
     </body>
 </html>

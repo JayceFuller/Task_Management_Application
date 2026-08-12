@@ -88,11 +88,13 @@
         <!-- List Form End -->
 
         <div class="app">
-            <h2>All Tasks</h2>
+            <h1>All Tasks</h1>
             <hr />
             
-            <button class="button" onclick="openListDialog()">+ Create List</button>
-            <button class="button" onclick="openTaskDialog()">+ Create Task</button>
+            <div class="d-flex-row">
+                <button class="button" onclick="openListDialog()">+ Create List</button>
+                <button class="button" onclick="openTaskDialog()">+ Create Task</button>
+            </div>
             
             <div id="lists" class="lists"></div>
         </div>

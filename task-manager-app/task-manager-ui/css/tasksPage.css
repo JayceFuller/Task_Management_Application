@@ -42,17 +42,17 @@ li.group-item {
     display: flex;
     align-items: center;
     width: 100%;
-    height: 14px;
+    line-height: 1.4;
 }
 
-li.group-item .task-btn {
+li.group-item .opt-btn {
     display: none;
     margin-left: auto;
     background: none;
     color: white;
     border-radius: 5px;
 }
-    li.group-item:hover .task-btn {
+    li.group-item:hover .opt-btn {
         display: inline-block;
     }
 

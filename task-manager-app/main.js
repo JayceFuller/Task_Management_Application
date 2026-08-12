@@ -143,9 +143,9 @@ ipcMain.handle('createTask', async (event, formData) => {
         return { success: false };
     }
 });
-ipcMain.handle('deleteTask', async (event, task) => {
+ipcMain.handle('deleteTask', async (event, taskId) => {
     try {
-        const rows = taskDA.deleteTask(task);
+        const rows = taskDA.deleteTask(taskId);
         if (rows > 0) {
             return { success: true };
         }
@@ -236,6 +236,16 @@ ipcMain.handle('getTodaysEvents', async () => {
         return [];
     }
 });
+ipcMain.handle('getEventById', async (event, eventId) => {
+    try {
+        const data = eventDA.getEventById(eventId);
+        return data;
+    }
+    catch (err) {
+        console.log('Error in eventDA.getEventById(): ', err);
+        return [];
+    }
+});
 ipcMain.handle('createEvent', async (event, formData) => {
     try {
         const rows = eventDA.createEvent(formData);
@@ -249,9 +259,16 @@ ipcMain.handle('createEvent', async (event, formData) => {
         return { success: false };
     }
 });
-ipcMain.handle('deleteEvent', () => {
-    return eventDA.deleteEvent();
-})
+ipcMain.handle('deleteEvent', async (event, eventId) => {
+    try {
+        const rows = eventDA.deleteEvent(eventId);
+        return { success: true };
+    }
+    catch (err) {
+        console.log('Error in eventDA.deleteEvent(): ', err);
+        return { success: false };
+    }
+});
 ipcMain.handle('getEventByLabel', async (event, label) => {
     try {
         const events = eventDA.getEventByLabel(label);
@@ -260,6 +277,17 @@ ipcMain.handle('getEventByLabel', async (event, label) => {
     catch (err) {
         console.log('Error in eventDA.getEventByLabel(): ', err);
         return [];
+    }
+});
+
+ipcMain.handle('updateEvent', async (event, formData, eventId) => {
+    try {
+        const rows = eventDA.updateEvent(formData, eventId);
+        return { success: true };
+    }
+    catch (err) {
+        console.log('Error in eventDA.updateEvent(): ', err);
+        return { success: false };
     }
 });
 

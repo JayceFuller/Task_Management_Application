@@ -1,5 +1,7 @@
 const eventForm = document.getElementById('event-form');
 const eventDialog = document.getElementById('event-dialog');
+const eventMenu = document.getElementById('event-menu');
+let currentEventId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
@@ -43,7 +45,11 @@ async function createLabelElement(label) {
         const li = document.createElement('li');
         li.className = 'group-item';
         li.dataset.eventId = event.EventId;
-        li.innerHTML = `${ event.EventName }`;
+        li.innerHTML = `
+            <a>${ event.EventName }</a>
+            <button class="opt-btn" title="Event options">⋮</button>
+        `;
+        li.querySelector('.opt-btn').addEventListener('click', (e) => openEventMenu(e, event.EventId));
         eventList.appendChild(li);
     });
     
@@ -64,7 +70,14 @@ eventForm.addEventListener('submit', async (e) => {
         label: formData.get('label')
     };
 
-    const isSuccess = await window.electronAPI.createEvent(eventInfo);
+    var isSuccess = null;
+    if (currentEventId == null) {
+        isSuccess = await window.electronAPI.createEvent(eventInfo);
+    }
+    else {
+        isSuccess = await window.electronAPI.updateEvent(eventInfo, currentEventId);
+    }
+
     if (isSuccess) {
         eventForm.reset();
         closeEventDialog();
@@ -75,7 +88,7 @@ eventForm.addEventListener('submit', async (e) => {
 /**
  * Open the event dialog for editing and creation
  */
-async function openEventDialog() {
+async function openEventDialog(id = null, labelId = null) {
     const labelsArray = /**@type { Label[] }*/ await window.electronAPI.getLabels() || [];
     const labelsDropdown = document.getElementById('label-select');
     labelsDropdown.innerHTML = '';
@@ -86,6 +99,37 @@ async function openEventDialog() {
         labelsDropdown.appendChild(labelOption);
     });
 
+    const name = document.getElementById('event-name');
+    const location = document.getElementById('location');
+    const start = document.getElementById('start');
+    const end = document.getElementById('end');
+    const details = document.getElementById('details');
+    const label = document.getElementById('label-select');
+
+    if (id != null) {
+        const event = /**@type { Event }*/await window.electronAPI.getEventById(id) || null;
+        name.value = event.EventName;
+        location.value = event.Location;
+        start.value = event.StartDate;
+        end.value = event.EndDate;
+        details.value = event.EventDesc;
+        label.value = event.LabelId;
+    }
+    else {
+        name.value = '';
+        location.value = '';
+        start.value = '';
+        end.value = '';
+
+        if (labelId != null) {
+            label.value = labelId;
+        }
+        else {
+            label.value = '';
+        }
+    }
+
+    currentEventId = id;
     eventDialog.style.display = 'block';
 }
 
@@ -94,4 +138,56 @@ async function openEventDialog() {
  */
 function closeEventDialog() {
     eventDialog.style.display = 'none';
+}
+
+/**
+ * Open the event menu options for the selected event. Sets an event listener to check if the user
+ * clicks outside the menu area
+ */
+function openEventMenu(e, eventId) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const container = document.getElementById('lists');
+    eventMenu.style.top = `${ rect.top }px`;
+    eventMenu.style.left = `${ rect.left - 80 }px`;
+    eventMenu.style.display = 'block';
+    eventMenu.dataset.eventId = eventId;
+
+    setTimeout(() => {
+        document.addEventListener('click', eventMenuListener);
+    }, 0);
+}
+
+/**
+ * Handles the event menu event listener to check if a user clicks outside the menu. If they do,
+ * hide the menu
+ */
+function eventMenuListener(event) {
+    if (!eventMenu.contains(event.target)) {
+        hideEventMenu();
+    }
+}
+
+/**
+ * Hide the event menu
+ */
+function hideEventMenu() {
+    eventMenu.style.display = 'none';
+    document.removeEventListener('click', eventMenuListener);
+}
+
+/**
+ * Open the event dialog for editing and send over the selected event's id
+ */
+function editEvent() {
+    hideEventMenu();
+    openEventDialog(eventMenu.dataset.eventId, null);
+}
+
+/**
+ * Request to delete the selected event from the database
+ */
+async function deleteEvent() {
+    hideEventMenu();
+    await window.electronAPI.deleteEvent(eventMenu.dataset.eventId);
+    loadPage();
 }
