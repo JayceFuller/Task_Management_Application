@@ -5,8 +5,8 @@ const events = document.getElementById('events');
 
 document.addEventListener("DOMContentLoaded", () => {
     getDateDisplay();
-    loadTasks();
     loadOverdue();
+    loadTasks();
     loadEvents();
 });
 
@@ -32,17 +32,25 @@ function getDateDisplay() {
 async function loadTasks() {
     const tasksArray = /**@type { Task[] }*/ await window.electronAPI.getTodaysTasks() || [];
 
-    tasksArray.forEach(task => {
-        const li = document.createElement('li');
-        li.className = "group-item";
-        li.dataset.taskId = task.TaskId;
-        li.innerHTML = `
-            <input type="checkbox" class="task-checkbox" title="Mark completed">
-            <a>${ task.TaskName }</a>
-        `;
-        li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
-        tasks.appendChild(li);
-    });
+    if (tasksArray.length <= 0 && overdueContainer.style.display === 'none') {
+        const p = document.createElement('p');
+        p.innerHTML = `You have no tasks due today!`;
+        tasks.appendChild(p);
+    }
+
+    else {
+        tasksArray.forEach(task => {
+            const li = document.createElement('li');
+            li.className = "group-item";
+            li.dataset.taskId = task.TaskId;
+            li.innerHTML = `
+                <input type="checkbox" class="task-checkbox" title="Mark completed">
+                <a>${ task.TaskName }</a>
+            `;
+            li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
+            tasks.appendChild(li);
+        });
+    }
 }
 
 /**

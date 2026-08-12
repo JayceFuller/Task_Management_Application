@@ -1,6 +1,12 @@
 const labelForm = document.getElementById('label-form');
 const labelDialog = document.getElementById('label-dialog');
+const labelMenu = document.getElementById('label-menu');
+const labelHeaderBar = labelDialog.querySelector('.header-bar');
+
 let currentLabelId = null;
+let isDraggingLabel = false;
+let labelOffsetX = 0;
+let labelOffsetY = 0;
 
 /** 
  * Open label dialog to create or edit a label
@@ -18,14 +24,14 @@ async function openLabelDialog(id = null) {
     }
 
     currentLabelId = id;
-    labelDialog.style.display = 'block';
+    labelDialog.show();
 }
 
 /**
  * Close the label dialog for editing or creation
  */
 function closeLabelDialog() {
-    labelDialog.style.display = 'none';
+    labelDialog.close();
 }
 
 /**
@@ -55,7 +61,7 @@ labelForm.addEventListener('submit', async (e) => {
 });
 
 /** 
- * Open the label menu options for the selected label. Sets an event labelener to check if the user
+ * Open the label menu options for the selected label. Sets an event listener to check if the user
  * clicks outside the menu area
  */
 function openLabelMenu(e, labelId) {
@@ -67,12 +73,12 @@ function openLabelMenu(e, labelId) {
     labelMenu.dataset.labelId = labelId;
 
     setTimeout(() => {
-        document.addEventlabelener('click', labelMenuListener);
+        document.addEventListener('click', labelMenuListener);
     }, 0);
 }
 
 /**
- * Handles the label menu event labelener to check if a user clicks outside the menu. If they do,
+ * Handles the label menu event listener to check if a user clicks outside the menu. If they do,
  * hide the menu
  */
 function labelMenuListener(e) {
@@ -105,10 +111,28 @@ function deleteLabel() {
     window.electronAPI.deleteLabel(labelMenu.dataset.labelId);
 }
 
-/**
- * Request to delete all completed tasks for the selected label from the database
- */
-function deleteCompleted() {
-    hideLabelMenu();
-    window.electronAPI.deleteCompleted(labelMenu.dataset.labelId);
+labelHeaderBar.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('close-button')) return;
+    
+    isDraggingLabel = true;
+
+    const rect = labelDialog.getBoundingClientRect();
+    labelOffsetX = e.clientX - rect.left;
+    labelOffsetY = e.clientY - rect.top;
+
+    document.addEventListener('mousemove', dragLabelDialog);
+    document.addEventListener('mouseup', stopDraggingLabelDialog);
+});
+
+function dragLabelDialog(e) {
+    if (!isDraggingLabel) return;
+
+    labelDialog.style.left = `${e.clientX - labelOffsetX}px`;
+    labelDialog.style.top = `${e.clientY - labelOffsetY}px`;
+}
+
+function stopDraggingLabelDialog() {
+    isDraggingLabel = false;
+    document.removeEventListener('mousemove', dragLabelDialog);
+    document.removeEventListener('mouseup', stopDraggingLabelDialog);
 }

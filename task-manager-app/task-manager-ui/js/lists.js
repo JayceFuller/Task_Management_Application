@@ -1,7 +1,12 @@
 const listForm = document.getElementById('list-form');
 const listMenu = document.getElementById('list-menu');
 const listDialog = document.getElementById('list-dialog');
+const listHeaderBar = listDialog.querySelector('.header-bar');
+
 let currentListId = null;
+let isDraggingList = false;
+let listOffsetX = 0;
+let listOffsetY = 0;
 
 /** 
  * Open list dialog to create or edit a list
@@ -19,14 +24,14 @@ async function openListDialog(id = null) {
     }
 
     currentListId = id;
-    listDialog.style.display = 'block';
+    listDialog.show();
 }
 
 /**
  * Close the list dialog for editing or creation
  */
 function closeListDialog() {
-    listDialog.style.display = 'none';
+    listDialog.close();
 }
 
 /**
@@ -101,15 +106,44 @@ function editList() {
 /**
  * Request to delete the selected list from the database
  */
-function deleteList() {
+async function deleteList() {
     hideListMenu();
     window.electronAPI.deleteList(listMenu.dataset.listId);
+    loadPage();
 }
 
 /**
  * Request to delete all completed tasks for the selected list from the database
  */
-function deleteCompleted() {
+async function deleteCompleted() {
     hideListMenu();
     window.electronAPI.deleteCompleted(listMenu.dataset.listId);
+    loadPage();
+}
+
+
+listHeaderBar.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('close-button')) return;
+    
+    isDraggingList = true;
+
+    const rect = listDialog.getBoundingClientRect();
+    listOffsetX = e.clientX - rect.left;
+    listOffsetY = e.clientY - rect.top;
+
+    document.addEventListener('mousemove', dragListDialog);
+    document.addEventListener('mouseup', stopDraggingListDialog);
+});
+
+function dragListDialog(e) {
+    if (!isDraggingList) return;
+
+    listDialog.style.left = `${e.clientX - listOffsetX}px`;
+    listDialog.style.top = `${e.clientY - listOffsetY}px`;
+}
+
+function stopDraggingListDialog() {
+    isDraggingList = false;
+    document.removeEventListener('mousemove', dragListDialog);
+    document.removeEventListener('mouseup', stopDraggingListDialog);
 }

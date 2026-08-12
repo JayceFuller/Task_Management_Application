@@ -18,8 +18,12 @@
     <body>
         <!-- Event Form Start -->
         <dialog id="event-dialog">
-            <button type="button" class="close-button" onclick="closeEventDialog()">x</button>
+            <div class="header-bar d-flex-row">
+                <p>New_Event.txt</p>
+                <button type="button" class="close-button" onclick="closeEventDialog()" title="Close">x</button>
+            </div>
             <br />
+
             <form id="event-form" class="form-content">
                 <div class="form-field">
                     <input id="event-name" type="text" name="event-name" placeholder="Add event name" required />
@@ -30,12 +34,12 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="location">Location:</label><br/>
+                    <label for="location" class="form-label">Location:</label><br/>
                     <input id="location" type="text" name="location" />
                 </div>
 
                 <div class="form-field">
-                    <label for="start">Date: </label><br/>
+                    <label for="start" class="form-label">Date: </label><br/>
                     <input id="start" type="datetime-local" name="start" required />
                     <input id="end" type="datetime-local" name="end" required />
                 </div>
@@ -62,8 +66,12 @@
 
         <!-- Label Create Form Start -->
         <dialog id="label-dialog">
-            <button type="button" class="close-button" onclick="closeLabelDialog()">x</button>
+            <div class="header-bar d-flex-row">
+                <p>New_Label.txt</p>
+                <button type="button" class="close-button" onclick="closeLabelDialog()" title="Close">x</button>
+            </div>
             <br />
+
             <form id="label-form" class="form-content">
                 <div class="form-field">
                     <input id="label-name" type="text" name="label-name" placeholder="Add label name" required />

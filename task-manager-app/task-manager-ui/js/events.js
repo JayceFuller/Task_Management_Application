@@ -1,7 +1,12 @@
 const eventForm = document.getElementById('event-form');
 const eventDialog = document.getElementById('event-dialog');
 const eventMenu = document.getElementById('event-menu');
+const eventHeaderBar = eventDialog.querySelector('.header-bar');
+
 let currentEventId = null;
+let isDraggingEvent = false;
+let eventOffsetX = 0;
+let eventOffsetY = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
@@ -35,10 +40,14 @@ async function createLabelElement(label) {
     groupDiv.className = 'border-container group';
     groupDiv.dataset.labelId = label.LabelId; 
     groupDiv.innerHTML = `
-        <h3>${ label.LabelName } </h3>
+        <div class="d-flex-row space-between">
+            <h3>${ label.LabelName }</h3>
+            <button class="nobkg-button vellip-btn" title="Label options">⋮</button>
+        </div>
 
         <ul class="event-list"></ul>
     `;
+    groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => openLabelMenu(e, label.LabelId));
 
     const eventList = groupDiv.querySelector('.event-list')
     eventsArray.forEach(event => {
@@ -46,9 +55,22 @@ async function createLabelElement(label) {
         li.className = 'group-item';
         li.dataset.eventId = event.EventId;
         li.innerHTML = `
-            <a>${ event.EventName }</a>
-            <button class="opt-btn" title="Event options">⋮</button>
+            <div class="summary">
+                <span class="title" role="button" aria-expanded="false">${ event.EventName }</span>
+                <button class="opt-btn" title="Event options">⋮</button>
+            </div>
+
+            <div class="details">
+                <p>${ event.EventDesc }</p>
+            </div>
         `;
+
+        const title = li.querySelector('.title');
+        title.addEventListener('click', () => {
+            const isOpen = li.classList.toggle('is-open');
+            title.setAttribute('aria-expanded', isOpen.toString());
+        });
+
         li.querySelector('.opt-btn').addEventListener('click', (e) => openEventMenu(e, event.EventId));
         eventList.appendChild(li);
     });
@@ -130,14 +152,14 @@ async function openEventDialog(id = null, labelId = null) {
     }
 
     currentEventId = id;
-    eventDialog.style.display = 'block';
+    eventDialog.show();
 }
 
 /**
  * Close event dialog
  */
 function closeEventDialog() {
-    eventDialog.style.display = 'none';
+    eventDialog.close();
 }
 
 /**
@@ -190,4 +212,31 @@ async function deleteEvent() {
     hideEventMenu();
     await window.electronAPI.deleteEvent(eventMenu.dataset.eventId);
     loadPage();
+}
+
+
+eventHeaderBar.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('close-button')) return;
+    
+    isDraggingEvent = true;
+
+    const rect = eventDialog.getBoundingClientRect();
+    eventOffsetX = e.clientX - rect.left;
+    eventOffsetY = e.clientY - rect.top;
+
+    document.addEventListener('mousemove', dragEventDialog);
+    document.addEventListener('mouseup', stopDraggingEventDialog);
+});
+
+function dragEventDialog(e) {
+    if (!isDraggingEvent) return;
+
+    eventDialog.style.left = `${e.clientX - eventOffsetX}px`;
+    eventDialog.style.top = `${e.clientY - eventOffsetY}px`;
+}
+
+function stopDraggingEventDialog() {
+    isDraggingEvent = false;
+    document.removeEventListener('mousemove', dragEventDialog);
+    document.removeEventListener('mouseup', stopDraggingEventDialog);
 }

@@ -27,7 +27,9 @@ const electronAPI = {
 
     /** Label operations */
     getLabels: () => ipcRenderer.invoke('getLabels'),
+    getLabelById: (labelId) => ipcRenderer.invoke('getLabelById', labelId),
     createLabel: (formData) => ipcRenderer.invoke('createLabel', formData),
+    deleteLabel: (labelId) => ipcRenderer.invoke('deleteLabel', labelId),
 
     /** Event operations */
     getTodaysEvents: () => ipcRenderer.invoke('getTodaysEvents'),

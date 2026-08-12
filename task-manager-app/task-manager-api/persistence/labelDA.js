@@ -16,6 +16,19 @@ function getLabels() {
 }
 
 /**
+ * Get a label by id
+ * @param {int} labelId the id of the label to be found
+ * @returns the label found
+ */
+function getLabelById(labelId) {
+    const db = new Database(dbPath);
+    const sql = db.prepare(`SELECT * FROM Label WHERE LabelId = ?`);
+    const label = sql.get(labelId);
+    db.close();
+    return label;
+}
+
+/**
  * Create a new label and save it to the database
  * 
  * @param formData contains all the information to save a label to the database in the format
@@ -37,20 +50,20 @@ function createLabel(formData) {
 
 /**
  * Delete a label from the database
- * 
- * @param label the label to be deleted
+ * @param {int} labelId the id of the label to be deleted
  * @returns the number of rows saved
  */
-function deleteLabel(label) {
+function deleteLabel(labelId) {
     const db = new Database(dbPath);
     const sql = db.prepare(`DELETE FROM Label WHERE LabelId = ?`);
-    const rows = sql.run(label.LabelId);
+    const rows = sql.run(labelId);
     db.close();
     return rows;
 }
 
 module.exports = {
     getLabels,
+    getLabelById,
     createLabel,
     deleteLabel
 }

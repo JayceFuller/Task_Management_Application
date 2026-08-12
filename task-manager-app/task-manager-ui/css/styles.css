@@ -42,7 +42,7 @@ body {
     color: var(--text-color);
     background-image: var(--app-background);
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     font-family: var(--font);
     user-select: none;
     -webkit-app-region: drag;
@@ -200,8 +200,11 @@ h3 {
 
 /** Style window popup elements */
 dialog {
-    display: none;
+    position: fixed;
     padding: 0;
+    margin: 0;
+    top: 10%;
+    left: 30%;
     background-color: var(--dialog-color);
     color: var(--dialog-text-color);
 }
@@ -268,8 +271,10 @@ ul {
     }
 
 .header-bar {
-    /* cursor: move; */
+    cursor: move;
+    user-select: none;
     background-color: var(--accent-color);
     padding: 3px;
     height: 25px;
+    justify-content: space-between;
 }

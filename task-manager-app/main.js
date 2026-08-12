@@ -304,6 +304,16 @@ ipcMain.handle('getLabels', () => {
         return [];
     }
 });
+ipcMain.handle('getLabelById', (event, labelId) => {
+    try {
+        const label = labelDA.getLabelById(labelId);
+        return label;
+    }
+    catch (err) {
+        console.log('Error in labelDA.getLabels(): ', err);
+        return [];
+    }
+});
 ipcMain.handle('createLabel', (event, formData) => {
     try {
         const rows = labelDA.createLabel(formData);
@@ -317,8 +327,18 @@ ipcMain.handle('createLabel', (event, formData) => {
         return { success: false };
     }
 })
-ipcMain.handle('deleteLabel', () => {
-    return labelDA.deleteLabel();
+ipcMain.handle('deleteLabel', (event, labelId) => {
+    try {
+        const rows = labelDA.deleteLabel(labelId);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in labelDA.deleteLabel(): ', err);
+        return { success: false };
+    }
 })
 
 /** Run application */
