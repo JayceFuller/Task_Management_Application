@@ -24,6 +24,9 @@
     /** Color for background of hoverable elements like buttons and nav-items */
     --accent-color-hover: #0D6665;
 
+    /** Color for background of hoverable elements like buttons and nav-items */
+    --accent-color-darker: #0b5958;
+
     /** Color of all popup windows, used for forms and error messages */
     --dialog-color: lightgray;
 
@@ -39,7 +42,7 @@ body {
     color: var(--text-color);
     background-image: var(--app-background);
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     font-family: var(--font);
     user-select: none;
     -webkit-app-region: drag;
@@ -74,19 +77,41 @@ button, input, textarea, select {
     height: auto;
 }
 
+/** Styles warning border */
+.warning-container {
+    border-style: solid;
+    border-color: var(red);
+    color: red;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: auto;
+}
+
 /** Styles the horizontal line */
 hr {
-    margin-top: 3px;
-    margin-bottom: 3px;
-    color: var(--text-color);
+    border: 1px var(--text-color) solid;
+    margin: 5px 0px;
     opacity: 100%;
-    border-width: 2px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+    font-style: var(--font);
 }
 
 /** Styles heading 2 */
 h2 {
     margin: 0;
     font-size: 24px;
+    font-style: var(--font);
+}
+
+/** Styles heading 3 */
+h3 {
+    margin: 0;
+    font-size: 18px;
     font-style: var(--font);
 }
 
@@ -175,8 +200,11 @@ h2 {
 
 /** Style window popup elements */
 dialog {
-    display: none;
+    position: fixed;
     padding: 0;
+    margin: 0;
+    top: 10%;
+    left: 30%;
     background-color: var(--dialog-color);
     color: var(--dialog-text-color);
 }
@@ -243,8 +271,10 @@ ul {
     }
 
 .header-bar {
-    /* cursor: move; */
+    cursor: move;
+    user-select: none;
     background-color: var(--accent-color);
     padding: 3px;
     height: 25px;
+    justify-content: space-between;
 }

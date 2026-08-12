@@ -51,13 +51,13 @@ function createTask(formData) {
 /**
  * Delete a task from the database
  * 
- * @param {Task} task the task to be deleted
+ * @param {int} taskId the id of the task to be deleted
  * @returns the number of rows saved
  */
-function deleteTask(task) {
+function deleteTask(taskId) {
     const db = new Database(dbPath);
     const sql = db.prepare(`DELETE FROM Task WHERE TaskId = ?`);
-    const rows = sql.run(task.TaskId);
+    const rows = sql.run(taskId);
     db.close();
     return rows;
 }

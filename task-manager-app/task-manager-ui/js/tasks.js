@@ -1,9 +1,14 @@
 const taskForm = document.getElementById('task-form');
 const taskMenu = document.getElementById('task-menu');
 const taskDialog = document.getElementById('task-dialog');
+const taskHeaderBar = taskDialog.querySelector('.header-bar');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
+
 let currentTaskId = null;
+let isDraggingTask = false;
+let taskOffsetX = 0;
+let taskOffsetY = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPage();
@@ -28,6 +33,7 @@ async function loadPage() {
 /** 
  * Creates a list box element for the given list object
  * @param {List} list the list to create a display box for
+ * @returns the group div to be displayed
  */
 async function createListElement(list) {
     const tasksArray = /**@type { Task[] }*/ await window.electronAPI.getTasksByList(list) || [];
@@ -42,7 +48,7 @@ async function createListElement(list) {
             <button class="nobkg-button vellip-btn" title="List options">⋮</button>
         </div>
 
-        <button class="add-button" title="Add a task">+ Add a task</button>
+        <button class="add-button">+ Add a task</button>
         <ul class="task-list"></ul>
 
         <details class="subheader">
@@ -59,11 +65,24 @@ async function createListElement(list) {
         li.className = 'group-item';
         li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-            <input type="checkbox" class="task-checkbox" title="Mark completed">
-            <a>${ task.TaskName }</a>
-            <button class="task-btn" title="Task options">⋮</button>
+            <div class="summary">
+                <input type="checkbox" class="task-checkbox" title="Mark completed">
+                <span class="title" role="button" aria-expanded="false">${ task.TaskName }</span>
+                <button class="opt-btn" title="Task options">⋮</button>
+            </div>
+
+            <div class="details">
+                <p>${ task.TaskDesc }</p>
+            </div>
         `;
-        li.querySelector('.task-btn').addEventListener('click', (e) => openTaskMenu(e, task.TaskId));
+
+        const title = li.querySelector('.title');
+        title.addEventListener('click', () => {
+            const isOpen = li.classList.toggle('is-open');
+            title.setAttribute('aria-expanded', isOpen.toString());
+        });
+
+        li.querySelector('.opt-btn').addEventListener('click', (e) => openTaskMenu(e, task.TaskId));
         li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
         taskList.appendChild(li);
     });
@@ -76,7 +95,6 @@ async function createListElement(list) {
         li.innerHTML = `
             <input type="checkbox" class="task-checkbox" title="Mark uncompleted" checked>
             <a>${ task.TaskName }</a>
-            <button class="task-btn" title="Task options">⋮</button>
         `;
         li.querySelector('.task-checkbox').addEventListener('change', () => uncompleteTask(task));
         completedList.appendChild(li);
@@ -131,24 +149,24 @@ async function openTaskDialog(id = null, listId = null) {
         due.value = '';
         level.value = 0;
         details.value = '';
-    }
 
-    if (listId != null) {
-        list.value = listId;
-    }
-    else {
-        list.value = '';
+        if (listId != null) {
+            list.value = listId;
+        }
+        else {
+            list.value = '';
+        }
     }
 
     currentTaskId = id;
-    taskDialog.style.display = 'block';
+    taskDialog.show();
 }
 
 /**
  * Close the task dialog
  */
 function closeTaskDialog() {
-    taskDialog.style.display = 'none';
+    taskDialog.close();
 }
 
 /**
@@ -252,7 +270,34 @@ function editTask() {
 /**
  * Request to delete the selected task from the database
  */
-function deleteTask() {
-    hideMenuTask();
-    window.electronAPI.deleteTask(taskMenu.dataset.taskId);
+async function deleteTask() {
+    hideTaskMenu();
+    await window.electronAPI.deleteTask(taskMenu.dataset.taskId);
+    loadPage();
+}
+
+taskHeaderBar.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('close-button')) return;
+    
+    isDraggingTask = true;
+
+    const rect = taskDialog.getBoundingClientRect();
+    taskOffsetX = e.clientX - rect.left;
+    taskOffsetY = e.clientY - rect.top;
+
+    document.addEventListener('mousemove', dragTaskDialog);
+    document.addEventListener('mouseup', stopDraggingTaskDialog);
+});
+
+function dragTaskDialog(e) {
+    if (!isDraggingTask) return;
+
+    taskDialog.style.left = `${e.clientX - taskOffsetX}px`;
+    taskDialog.style.top = `${e.clientY - taskOffsetY}px`;
+}
+
+function stopDraggingTaskDialog() {
+    isDraggingTask = false;
+    document.removeEventListener('mousemove', dragTaskDialog);
+    document.removeEventListener('mouseup', stopDraggingTaskDialog);
 }

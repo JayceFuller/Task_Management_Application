@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>Personal Task Manager - Today's Tasks</title>
+        <meta charset="UTF-8" />
+        <title>Personal Task Manager | Today</title>
+
         <link rel="stylesheet" href="./css/styles.css" />
-        <script src="./js/home.js"></script>
-        <script src="./js/navbar.js"></script>
+        <script src="./js/home.js" defer></script>
+        <script src="./js/navbar.js" defer></script>
     </head>
 
     <header>
-        <div id="navbar"></div>
+        <nav-bar></nav-bar>
     </header>
 
     <body>
         <div class="app">
             <div>
-                <h2 id="date"></h2>
+                <h1 id="date"></h1>
             </div>
             <hr />
 
-            <div class="border-container">
-                <h3>Events</h3>
+            <div>
                 <ul id="events"></ul>
             </div>
 
             <div>
-                <h3>Tasks</h3>
-                <div id="overdueContainer" class="border-container">
-                    <h4>OVERDUE:</h4>
+                <h2>Tasks</h2>
+                <div id="overdueContainer" class="warning-container">
+                    <h3>OVERDUE</h3>
                     <ul id="overdue"></ul>
                 </div>
                 <ul id="tasks"></ul>

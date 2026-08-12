@@ -11,20 +11,13 @@
     color: var(--accent-color);
     background: none;
     font-size: 14;
-    border: none;
+    border: 2px var(--accent-color) solid;
     padding: 5px;
     font-weight: bold;
 }
-
-.accordion {
-    cursor: pointer;
-    transition: 0.4s;
-}
-
-.panel {
-    display: none;
-    overflow: hidden;
-}
+    .add-button:hover {
+        color: var(--accent-text-color-hover);
+    }
 
 h3 {
     margin: 0;
@@ -40,19 +33,21 @@ summary:hover {
 
 li.group-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 14px;
+    line-height: 1.4;
 }
 
-li.group-item .task-btn {
+li.group-item .opt-btn {
     display: none;
     margin-left: auto;
     background: none;
     color: white;
     border-radius: 5px;
+    float: right;
 }
-    li.group-item:hover .task-btn {
+    li.group-item:hover .opt-btn {
         display: inline-block;
     }
 
@@ -85,15 +80,34 @@ p {
         background-color: var(--accent-color-hover);
     }
 
-hr {
-    border: 1px lightgray solid;
-    margin: 5px 0px;
-}
-
 .sort-title {
     font-size: 13px;
 }
 
 .lists {
     flex: 1;
+}
+
+.summary {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+    .summary:hover .title {
+        color: var(--accent-color);
+    }
+
+.title {
+    flex-grow: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+.details {
+    display: none;
+    width: 90%;
+}
+
+.group-item.is-open .details {
+    display: block;
 }

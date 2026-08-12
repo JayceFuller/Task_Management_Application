@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>Personal Task Manager - Upcoming Events</title>
+        <meta charset="UTF-8" />
+        <title>Personal Task Manager | All Events</title>
+
         <link rel="stylesheet" href="./css/styles.css" />
+        <link rel="stylesheet" href="./css/tasksPage.css" />
         <script src="./js/events.js" defer></script>
-        <script src="./js/navbar.js"></script>
+        <script src="./js/label.js" defer></script>
+        <script src="./js/navbar.js" defer></script>
     </head>
 
     <header>
-        <div id="navbar"></div>
+        <nav-bar></nav-bar>
     </header>
 
     <body>
-        <!-- Error Dialog -->
-        <dialog id="err"></dialog>
-
-        <!-- Event Create Form Start -->
-        <dialog id="eventDialog">
-            <button type="button" class="close-button" onclick="closeEventDialog()">x</button>
+        <!-- Event Form Start -->
+        <dialog id="event-dialog">
+            <div class="header-bar d-flex-row">
+                <p>New_Event.txt</p>
+                <button type="button" class="close-button" onclick="closeEventDialog()" title="Close">x</button>
+            </div>
             <br />
-            <form id="eventForm" class="form-content">
+
+            <form id="event-form" class="form-content">
                 <div class="form-field">
                     <input id="event-name" type="text" name="event-name" placeholder="Add event name" required />
                 </div>
@@ -30,18 +34,18 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="location">Location:</label><br/>
+                    <label for="location" class="form-label">Location:</label><br/>
                     <input id="location" type="text" name="location" />
                 </div>
 
                 <div class="form-field">
-                    <label for="start">Date: </label><br/>
+                    <label for="start" class="form-label">Date: </label><br/>
                     <input id="start" type="datetime-local" name="start" required />
                     <input id="end" type="datetime-local" name="end" required />
                 </div>
 
                 <div class="form-field">
-                    <select id="recurrence" name="recurrence" form="eventForm" required>
+                    <select id="recurrence" name="recurrence" required>
                         <option value="0" selected>Does not recurr</option>
                         <option value="1">Daily</option>
                         <option value="2">Weekly</option>
@@ -52,7 +56,7 @@
 
                 <div class="form-field">
                     <label for="label" class="form-label">Label:</label>
-                    <select id="labelSelect" name="label" form="eventForm" required></select>
+                    <select id="label-select" name="label" required></select>
                 </div>
 
                 <button type="submit" class="button">Save</button>
@@ -61,12 +65,16 @@
         <!-- Event Create Form End -->
 
         <!-- Label Create Form Start -->
-        <dialog id="labelDialog">
-            <button type="button" class="close-button" onclick="closeLabelDialog()">x</button>
+        <dialog id="label-dialog">
+            <div class="header-bar d-flex-row">
+                <p>New_Label.txt</p>
+                <button type="button" class="close-button" onclick="closeLabelDialog()" title="Close">x</button>
+            </div>
             <br />
-            <form id="labelForm" class="form-content">
+
+            <form id="label-form" class="form-content">
                 <div class="form-field">
-                    <input id="label-name" type="text" name="label-name" placeholder="Add label name"/>
+                    <input id="label-name" type="text" name="label-name" placeholder="Add label name" required />
                 </div>
                 <button type="submit" class="button">Save</button>
             </form>
@@ -74,12 +82,25 @@
         <!-- Label Create Form End -->
 
         <div class="app">
-            <h2>Upcoming Events</h2>
+            <h1>All Events</h1>
             <hr />
-            <button class="button" onclick="openEventDialog()">+ Create Event</button>
-            <button class="button" onclick="openLabelDialog()">+ Create Label</button>
+
+            <div class="d-flex-row">
+                <button class="button" onclick="openEventDialog()">+ Create Event</button>
+                <button class="button" onclick="openLabelDialog()">+ Create Label</button>
+            </div>
             
-            <div id="labels"></div>
+            <div id="labels" class="labels"></div>
         </div>
+
+        <ul id="label-menu" class="menu">
+            <li class="menu-button" id="edit-label" onclick="editLabel()">Rename label</li>
+            <li class="menu-button" id="delete-label" onclick="deleteLabel()">Delete label</li>
+        </ul>
+
+        <ul id="event-menu" class="menu">
+            <li class="menu-button" id="edit-event" onclick="editEvent()">Edit event</li>
+            <li class="menu-button" id="delete-event" onclick="deleteEvent()">Delete event</li>
+        </ul>
     </body>
 </html>

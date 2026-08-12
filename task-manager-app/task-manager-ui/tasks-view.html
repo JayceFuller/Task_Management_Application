@@ -2,23 +2,24 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Personal Task Manager - All Tasks</title>
+        <title>Personal Task Manager | All Tasks</title>
 
         <link rel="stylesheet" href="./css/styles.css" />
         <link rel="stylesheet" href="./css/tasksPage.css">
         <script src="./js/tasks.js" defer></script>
         <script src="./js/lists.js" defer></script>
-        <script src="./js/navbar.js"></script>
+        <script src="./js/navbar.js" defer></script>
     </head>
 
     <header>
-        <div id="navbar"></div>
+        <nav-bar></nav-bar>
     </header>
 
     <body>
         <!-- Task Form Start -->
         <dialog id="task-dialog">
-            <div class="header-bar">
+            <div class="header-bar d-flex-row">
+                <p>New_Task.txt</p>
                 <button type="button" class="close-button" onclick="closeTaskDialog()" title="Close">x</button>
             </div>
             <br />
@@ -74,7 +75,8 @@
 
         <!-- List Form Start -->
         <dialog id="list-dialog">
-            <div class="header-bar">
+            <div class="header-bar d-flex-row">
+                <p>New_List.txt</p>
                 <button type="button" class="close-button" onclick="closeListDialog()" title="Close">x</button>
             </div>
 
@@ -88,11 +90,13 @@
         <!-- List Form End -->
 
         <div class="app">
-            <h2>All Tasks</h2>
+            <h1>All Tasks</h1>
             <hr />
             
-            <button class="button" onclick="openListDialog()">+ Create List</button>
-            <button class="button" onclick="openTaskDialog()">+ Create Task</button>
+            <div class="d-flex-row">
+                <button class="button" onclick="openListDialog()">+ Create List</button>
+                <button class="button" onclick="openTaskDialog()">+ Create Task</button>
+            </div>
             
             <div id="lists" class="lists"></div>
         </div>

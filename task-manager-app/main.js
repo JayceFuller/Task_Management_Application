@@ -143,9 +143,9 @@ ipcMain.handle('createTask', async (event, formData) => {
         return { success: false };
     }
 });
-ipcMain.handle('deleteTask', async (event, task) => {
+ipcMain.handle('deleteTask', async (event, taskId) => {
     try {
-        const rows = taskDA.deleteTask(task);
+        const rows = taskDA.deleteTask(taskId);
         if (rows > 0) {
             return { success: true };
         }
@@ -226,14 +226,24 @@ ipcMain.handle('updateTask', async (event, formData, taskId) => {
 /**********************************************************************************************************
  * Event operations
  *********************************************************************************************************/
-ipcMain.handle('getTodaysEvents', () => {
+ipcMain.handle('getTodaysEvents', async () => {
     try {
         const data = eventDA.getTodaysEvents();
-        return { success: true, data: data };
+        return data;
     }
     catch (err) {
         console.log('Error in eventDA.getTodaysEvents(): ', err);
-        return { success: false };
+        return [];
+    }
+});
+ipcMain.handle('getEventById', async (event, eventId) => {
+    try {
+        const data = eventDA.getEventById(eventId);
+        return data;
+    }
+    catch (err) {
+        console.log('Error in eventDA.getEventById(): ', err);
+        return [];
     }
 });
 ipcMain.handle('createEvent', async (event, formData) => {
@@ -249,17 +259,35 @@ ipcMain.handle('createEvent', async (event, formData) => {
         return { success: false };
     }
 });
-ipcMain.handle('deleteEvent', () => {
-    return eventDA.deleteEvent();
-})
+ipcMain.handle('deleteEvent', async (event, eventId) => {
+    try {
+        const rows = eventDA.deleteEvent(eventId);
+        return { success: true };
+    }
+    catch (err) {
+        console.log('Error in eventDA.deleteEvent(): ', err);
+        return { success: false };
+    }
+});
 ipcMain.handle('getEventByLabel', async (event, label) => {
     try {
         const events = eventDA.getEventByLabel(label);
-        return { success: true, data: events };
+        return events;
     }
     catch (err) {
         console.log('Error in eventDA.getEventByLabel(): ', err);
-        return { success: false, data: [] };
+        return [];
+    }
+});
+
+ipcMain.handle('updateEvent', async (event, formData, eventId) => {
+    try {
+        const rows = eventDA.updateEvent(formData, eventId);
+        return { success: true };
+    }
+    catch (err) {
+        console.log('Error in eventDA.updateEvent(): ', err);
+        return { success: false };
     }
 });
 
@@ -269,11 +297,21 @@ ipcMain.handle('getEventByLabel', async (event, label) => {
 ipcMain.handle('getLabels', () => {
     try {
         const labels = labelDA.getLabels();
-        return { success: true, data: labels };
+        return labels;
     }
     catch (err) {
         console.log('Error in labelDA.getLabels(): ', err);
-        return { success: false };
+        return [];
+    }
+});
+ipcMain.handle('getLabelById', (event, labelId) => {
+    try {
+        const label = labelDA.getLabelById(labelId);
+        return label;
+    }
+    catch (err) {
+        console.log('Error in labelDA.getLabels(): ', err);
+        return [];
     }
 });
 ipcMain.handle('createLabel', (event, formData) => {
@@ -289,8 +327,18 @@ ipcMain.handle('createLabel', (event, formData) => {
         return { success: false };
     }
 })
-ipcMain.handle('deleteLabel', () => {
-    return labelDA.deleteLabel();
+ipcMain.handle('deleteLabel', (event, labelId) => {
+    try {
+        const rows = labelDA.deleteLabel(labelId);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in labelDA.deleteLabel(): ', err);
+        return { success: false };
+    }
 })
 
 /** Run application */
