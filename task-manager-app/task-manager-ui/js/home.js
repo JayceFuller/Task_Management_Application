@@ -44,8 +44,16 @@ async function loadTasks() {
             li.className = "group-item";
             li.dataset.taskId = task.TaskId;
             li.innerHTML = `
-                <input type="checkbox" class="task-checkbox" title="Mark completed">
-                <a>${ task.TaskName }</a>
+                <div class="task-container">
+                    <div class="summary">
+                        <input type="checkbox" class="task-checkbox" title="Mark completed">
+                        <span class="title">${ task.TaskName }</span>
+                        <br/>
+                    </div>
+
+                    ${task.TaskDesc ? `<p class="sub-text">${task.TaskDesc}</p>` : ''}
+                    <p class="fake-btn">&#128338; ${ formatTime(task.DueDate) }</p>
+                </div>
             `;
             li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
             tasks.appendChild(li);
@@ -66,8 +74,15 @@ async function loadOverdue() {
             const li = document.createElement('li');
             li.className = "group-item";
             li.innerHTML = `
-                <input type="checkbox" class="task-checkbox" title="Mark completed">
-                <a>${ task.TaskName }</a>
+                <div class="task-container">
+                    <div class="summary">
+                        <input type="checkbox" class="task-checkbox" title="Mark completed">
+                        <span class="title">${ task.TaskName }</span>
+                        <br/>
+                    </div>
+
+                    ${task.TaskDesc ? `<p class="sub-text">${task.TaskDesc}</p>` : ''}
+                </div>
             `;
             li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
             overdueTasks.appendChild(li);
@@ -95,15 +110,5 @@ async function loadEvents() {
 
         const hr = document.createElement('hr');
         events.appendChild(hr);
-    }
-}
-
-/**
- * Request to swap a task's status to complete. If successful, reload the page
- */
-function completeTask(task) {
-    const success = window.electronAPI.completeTask(task.TaskId);
-    if (success) {
-        loadPage();
     }
 }
