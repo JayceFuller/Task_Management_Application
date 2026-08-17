@@ -6,7 +6,7 @@
 
         <link rel="stylesheet" href="./css/styles.css" />
         <script src="./js/events.js" defer></script>
-        <script src="./js/label.js" defer></script>
+        <script src="./js/calendar.js" defer></script>
         <script src="./js/navbar.js" defer></script>
         <script src="./js/shared.js" defer></script>
     </head>
@@ -19,7 +19,7 @@
         <!-- Event Form Start -->
         <dialog id="event-dialog">
             <div class="header-bar d-flex-row">
-                <p>New_Event.txt</p>
+                <p class="dialog-header"></p>
                 <button type="button" class="close-button" onclick="closeEventDialog()" title="Close">x</button>
             </div>
             <br />
@@ -34,12 +34,12 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="location" class="form-label">Location:</label><br/>
+                    <calendar for="location" class="form-calendar">Location:</calendar><br/>
                     <input id="location" type="text" name="location" />
                 </div>
 
                 <div class="form-field">
-                    <label for="start" class="form-label">Date: </label><br/>
+                    <calendar for="start" class="form-calendar">Date: </calendar><br/>
                     <input id="start" type="datetime-local" name="start" required />
                     <input id="end" type="datetime-local" name="end" required />
                 </div>
@@ -55,8 +55,8 @@
                 </div><br/>
 
                 <div class="form-field">
-                    <label for="label" class="form-label">Label:</label>
-                    <select id="label-select" name="label" required></select>
+                    <calendar for="calendar" class="form-calendar">Calendar:</calendar>
+                    <select id="calendar-select" name="calendar" required></select>
                 </div>
 
                 <button type="submit" class="button">Save</button>
@@ -64,22 +64,22 @@
         </dialog>
         <!-- Event Create Form End -->
 
-        <!-- Label Create Form Start -->
-        <dialog id="label-dialog">
+        <!-- Calendar Create Form Start -->
+        <dialog id="calendar-dialog">
             <div class="header-bar d-flex-row">
-                <p>New_Label.txt</p>
-                <button type="button" class="close-button" onclick="closeLabelDialog()" title="Close">x</button>
+                <p class="dialog-header"></p>
+                <button type="button" class="close-button" onclick="closeCalendarDialog()" title="Close">x</button>
             </div>
             <br />
 
-            <form id="label-form" class="form-content">
+            <form id="calendar-form" class="form-content">
                 <div class="form-field">
-                    <input id="label-name" type="text" name="label-name" placeholder="Add label name" required />
+                    <input id="calendar-name" type="text" name="calendar-name" placeholder="Add calendar name" required />
                 </div>
                 <button type="submit" class="button">Save</button>
             </form>
         </dialog>
-        <!-- Label Create Form End -->
+        <!-- Calendar Create Form End -->
 
         <div class="app">
             <h1>All Events</h1>
@@ -87,15 +87,15 @@
 
             <div class="d-flex-row">
                 <button class="button" onclick="openEventDialog()">+ Create Event</button>
-                <button class="button" onclick="openLabelDialog()">+ Create Label</button>
+                <button class="button" onclick="openCalendarDialog()">+ Create Calendar</button>
             </div>
             
-            <div id="labels" class="labels"></div>
+            <div id="calendars" class="calendars"></div>
         </div>
 
-        <ul id="label-menu" class="menu">
-            <li class="menu-button" id="edit-label" onclick="editLabel()">Rename label</li>
-            <li class="menu-button" id="delete-label" onclick="deleteLabel()">Delete label</li>
+        <ul id="calendar-menu" class="menu">
+            <li class="menu-button" id="edit-calendar" onclick="editCalendar()">Rename Calendar</li>
+            <li class="menu-button" id="delete-calendar" onclick="deleteCalendar()">Delete Calendar</li>
         </ul>
 
         <ul id="event-menu" class="menu">

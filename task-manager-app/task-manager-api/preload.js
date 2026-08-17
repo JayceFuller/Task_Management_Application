@@ -25,17 +25,18 @@ const electronAPI = {
     deleteList: (listId) => ipcRenderer.invoke('deleteList', listId),
     renameList: (listName, listId) => ipcRenderer.invoke('renameList', listName, listId),
 
-    /** Label operations */
-    getLabels: () => ipcRenderer.invoke('getLabels'),
-    getLabelById: (labelId) => ipcRenderer.invoke('getLabelById', labelId),
-    createLabel: (formData) => ipcRenderer.invoke('createLabel', formData),
-    deleteLabel: (labelId) => ipcRenderer.invoke('deleteLabel', labelId),
+    /** Calendar operations */
+    getCalendars: () => ipcRenderer.invoke('getCalendars'),
+    getCalendarById: (calendarId) => ipcRenderer.invoke('getCalendarById', calendarId),
+    createCalendar: (formData) => ipcRenderer.invoke('createCalendar', formData),
+    deleteCalendar: (calendarId) => ipcRenderer.invoke('deleteCalendar', calendarId),
+    renameCalendar: (calendarName, calendarId) => ipcRenderer.invoke('renameCalendar', calendarName, calendarId),
 
     /** Event operations */
     getTodaysEvents: () => ipcRenderer.invoke('getTodaysEvents'),
     getEventById: (eventId) => ipcRenderer.invoke('getEventById', eventId),
     createEvent: (formData) => ipcRenderer.invoke('createEvent', formData),
-    getEventByLabel: (label) => ipcRenderer.invoke('getEventByLabel', label),
+    getEventByCalendar: (Calendar) => ipcRenderer.invoke('getEventByCalendar', Calendar),
     deleteEvent: (eventId) => ipcRenderer.invoke('deleteEvent', eventId),
     updateEvent: (formData, eventId) => ipcRenderer.invoke('updateEvent', formData, eventId)
 }

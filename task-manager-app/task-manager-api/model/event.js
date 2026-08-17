@@ -8,7 +8,7 @@ class Event {
         this.StartDate = event.StartDate;
         this.EndDate = event.EndDate;
         this.Recurrence = event.Recurrence;
-        this.LabelId = event.LabelId;
+        this.CalendarId = event.CalendarId;
 
     }
 
@@ -21,7 +21,7 @@ class Event {
             Location: this.Location,
             Recurrence: this.Recurrence,
             EndDate: this.EndDate,
-            LabelId: this.LabelId
+            CalendarId: this.CalendarId
         };
     }
 }

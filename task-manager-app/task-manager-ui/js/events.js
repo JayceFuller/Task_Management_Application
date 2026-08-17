@@ -1,5 +1,6 @@
 const eventForm = document.getElementById('event-form');
 const eventDialog = document.getElementById('event-dialog');
+const eventDialogHeader = eventDialog.querySelector('.dialog-header');
 const eventMenu = document.getElementById('event-menu');
 const eventHeaderBar = eventDialog.querySelector('.header-bar');
 
@@ -16,40 +17,40 @@ document.addEventListener('DOMContentLoaded', () => {
  * Load the page contents
  */
 async function loadPage() {
-    const container = document.getElementById('labels');
+    const container = document.getElementById('calendars');
     container.innerHTML = '';
     container.className = 'all-groups';
 
-    const labelsArray = /**@type { Label[] }*/ await window.electronAPI.getLabels() || [];
-    const labelElements = await Promise.all(labelsArray.map(async (label) => {
-        return await createLabelElement(label);
+    const calendarsArray = /**@type { calendar[] }*/ await window.electronAPI.getCalendars() || [];
+    const calendarElements = await Promise.all(calendarsArray.map(async (calendar) => {
+        return await createCalendarElement(calendar);
     }));
 
-    labelElements.forEach(el => container.appendChild(el));
+    calendarElements.forEach(el => container.appendChild(el));
 }
 
 /**
- * Create a label element to store events in
- * @param {Label} label the label for this grouping
+ * Create a calendar element to store events in
+ * @param {Calendar} calendar the calendar for this grouping
  * @returns the group div to be displayed
  */
-async function createLabelElement(label) {
-    const eventsArray = /**@type { Event[] }*/ await window.electronAPI.getEventByLabel(label) || [];
+async function createCalendarElement(calendar) {
+    const eventsArray = /**@type { Event[] }*/ await window.electronAPI.getEventByCalendar(calendar) || [];
 
     const groupDiv = document.createElement('div');
     groupDiv.className = 'border-container group';
-    groupDiv.dataset.labelId = label.LabelId; 
+    groupDiv.dataset.CalendarId = calendar.CalendarId; 
     groupDiv.innerHTML = `
         <div class="container">
             <div class="d-flex-row space-between">
-                <h3>${ label.LabelName }</h3>
-                <button class="nobkg-button vellip-btn" title="Label options">⋮</button>
+                <h3>${ calendar.CalendarName }</h3>
+                <button class="nobkg-button vellip-btn" title="Calendar options">⋮</button>
             </div>
         </div>
 
         <ul class="event-list"></ul>
     `;
-    groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => openLabelMenu(e, label.LabelId));
+    groupDiv.querySelector('.vellip-btn').addEventListener('click', (e) => openCalendarMenu(e, calendar.CalendarId));
 
     const eventList = groupDiv.querySelector('.event-list')
     eventsArray.forEach(event => {
@@ -92,7 +93,7 @@ eventForm.addEventListener('submit', async (e) => {
         start: formData.get('start'),
         end: formData.get('end'),
         recurrence: formData.get('recurrence'),
-        label: formData.get('label')
+        calendar: formData.get('calendar')
     };
 
     var isSuccess = null;
@@ -113,15 +114,15 @@ eventForm.addEventListener('submit', async (e) => {
 /**
  * Open the event dialog for editing and creation
  */
-async function openEventDialog(id = null, labelId = null) {
-    const labelsArray = /**@type { Label[] }*/ await window.electronAPI.getLabels() || [];
-    const labelsDropdown = document.getElementById('label-select');
-    labelsDropdown.innerHTML = '';
-    labelsArray.forEach(label => {
-        const labelOption = document.createElement('option');
-        labelOption.value = label.LabelId;
-        labelOption.textContent = label.LabelName;
-        labelsDropdown.appendChild(labelOption);
+async function openEventDialog(id = null, calendarId = null) {
+    const calendarsArray = /**@type { Calendar[] }*/ await window.electronAPI.getCalendars() || [];
+    const calendarsDropdown = document.getElementById('calendar-select');
+    calendarsDropdown.innerHTML = '';
+    calendarsArray.forEach(calendar => {
+        const calendarOption = document.createElement('option');
+        calendarOption.value = calendar.CalendarId;
+        calendarOption.textContent = calendar.CalendarName;
+        calendarsDropdown.appendChild(calendarOption);
     });
 
     const name = document.getElementById('event-name');
@@ -129,28 +130,30 @@ async function openEventDialog(id = null, labelId = null) {
     const start = document.getElementById('start');
     const end = document.getElementById('end');
     const details = document.getElementById('details');
-    const label = document.getElementById('label-select');
+    const calendar = document.getElementById('calendar-select');
 
     if (id != null) {
+        eventDialogHeader.textContent = `Edit_Event.txt`;
         const event = /**@type { Event }*/await window.electronAPI.getEventById(id) || null;
         name.value = event.EventName;
         location.value = event.Location;
         start.value = event.StartDate;
         end.value = event.EndDate;
         details.value = event.EventDesc;
-        label.value = event.LabelId;
+        calendar.value = event.CalendarId;
     }
     else {
+        eventDialogHeader.textContent = `New_Event.txt`;
         name.value = '';
         location.value = '';
         start.value = '';
         end.value = '';
 
-        if (labelId != null) {
-            label.value = labelId;
+        if (calendarId != null) {
+            calendar.value = calendarId;
         }
         else {
-            label.value = '';
+            calendar.value = '';
         }
     }
 

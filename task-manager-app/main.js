@@ -5,7 +5,7 @@ const { getWindowSettings, saveBounds } = require("./task-manager-api/user-setti
 const taskDA = require('./task-manager-api/persistence/taskDA.js');
 const listDA = require('./task-manager-api/persistence/listDA.js');
 const eventDA = require('./task-manager-api/persistence/eventDA.js');
-const labelDA = require('./task-manager-api/persistence/labelDA.js');
+const calendarDA = require('./task-manager-api/persistence/calendarDA.js');
 
 /**
  * Create the application window
@@ -269,13 +269,13 @@ ipcMain.handle('deleteEvent', async (event, eventId) => {
         return { success: false };
     }
 });
-ipcMain.handle('getEventByLabel', async (event, label) => {
+ipcMain.handle('getEventByCalendar', async (event, calendar) => {
     try {
-        const events = eventDA.getEventByLabel(label);
+        const events = eventDA.getEventByCalendar(calendar);
         return events;
     }
     catch (err) {
-        console.log('Error in eventDA.getEventByLabel(): ', err);
+        console.log('Error in eventDA.getEventByCalendar(): ', err);
         return [];
     }
 });
@@ -292,54 +292,67 @@ ipcMain.handle('updateEvent', async (event, formData, eventId) => {
 });
 
 /**********************************************************************************************************
- * Label operations
+ * Calendar operations
  *********************************************************************************************************/
-ipcMain.handle('getLabels', () => {
+ipcMain.handle('getCalendars', () => {
     try {
-        const labels = labelDA.getLabels();
-        return labels;
+        const calendars = calendarDA.getCalendars();
+        return calendars;
     }
     catch (err) {
-        console.log('Error in labelDA.getLabels(): ', err);
+        console.log('Error in calendarDA.getCalendars(): ', err);
         return [];
     }
 });
-ipcMain.handle('getLabelById', (event, labelId) => {
+ipcMain.handle('getCalendarById', (event, calendarId) => {
     try {
-        const label = labelDA.getLabelById(labelId);
-        return label;
+        const calendar = calendarDA.getCalendarById(calendarId);
+        return calendar;
     }
     catch (err) {
-        console.log('Error in labelDA.getLabels(): ', err);
+        console.log('Error in calendarDA.getCalendars(): ', err);
         return [];
     }
 });
-ipcMain.handle('createLabel', (event, formData) => {
+ipcMain.handle('createCalendar', (event, formData) => {
     try {
-        const rows = labelDA.createLabel(formData);
+        const rows = calendarDA.createCalendar(formData);
         if (rows > 0) {
             return { success: true };
         }
         return { success: false };
     }
     catch (err) {
-        console.log('Error in labelDA.createLabel(): ', err);
+        console.log('Error in calendarDA.createCalendar(): ', err);
         return { success: false };
     }
-})
-ipcMain.handle('deleteLabel', (event, labelId) => {
+});
+ipcMain.handle('deleteCalendar', (event, calendarId) => {
     try {
-        const rows = labelDA.deleteLabel(labelId);
+        const rows = calendarDA.deleteCalendar(calendarId);
         if (rows > 0) {
             return { success: true };
         }
         return { success: false };
     }
     catch (err) {
-        console.log('Error in labelDA.deleteLabel(): ', err);
+        console.log('Error in calendarDA.deleteCalendar(): ', err);
         return { success: false };
     }
-})
+});
+ipcMain.handle('renameCalendar', async (event, calendarName, calendarId) => {
+    try {
+        const rows = calendarDA.renameCalendar(calendarName, calendarId);
+        if (rows > 0) {
+            return { success: true };
+        }
+        return { success: false };
+    }
+    catch (err) {
+        console.log('Error in calendarDA.renameCalendar(): ', err);
+        return { success: false };
+    }
+});
 
 /** Run application */
 app.whenReady().then(createWindow);

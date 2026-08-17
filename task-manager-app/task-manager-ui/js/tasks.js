@@ -2,6 +2,7 @@ const taskForm = document.getElementById('task-form');
 const taskMenu = document.getElementById('task-menu');
 const taskDialog = document.getElementById('task-dialog');
 const taskHeaderBar = taskDialog.querySelector('.header-bar');
+const taskDialogHeader = taskDialog.querySelector('.dialog-header');
 const dueInput = document.getElementById('due');
 const allDayCheckbox = document.getElementById('all-day');
 
@@ -143,6 +144,7 @@ async function openTaskDialog(id = null, listId = null) {
     const list = document.getElementById('list-select');
 
     if (id != null) {
+        taskDialogHeader.textContent = `Edit_Task.txt`;
         const task = /**@type { Task }*/await window.electronAPI.getTaskById(id) || null;
         name.value = task.TaskName;
         due.value = new Date(task.DueDate);
@@ -151,6 +153,7 @@ async function openTaskDialog(id = null, listId = null) {
         list.value = task.ListId;
     }
     else {
+        taskDialogHeader.textContent = `New_Task.txt`;
         name.value = '';
         due.value = '';
         level.value = 0;

@@ -30,18 +30,18 @@ function getEventById(eventId) {
  * Create a new event and save it to the database
  * 
  * @param formData contains all the information to save a event to the database in the format
- * {name, details, location, start, end, recurrence group}
+ * {name, details, location, start, end, recurrence, calendar}
  * @return the number of rows saved to the database
  */
 function createEvent(formData) {
     const db = new Database(dbPath);
-    const { name, details, location, start, end, recurrence, label } = formData;
+    const { name, details, location, start, end, recurrence, calendar } = formData;
     const sql = db.prepare(`
         INSERT INTO Event (
-            EventName, EventDesc, Location, StartDate, EndDate, Recurrence, LabelId
+            EventName, EventDesc, Location, StartDate, EndDate, Recurrence, CalendarId
         ) VALUES(?, ?, ?, ?, ?, ?, ?)
     `);
-    const rows = sql.run(name, details, location, start, end, recurrence, label);
+    const rows = sql.run(name, details, location, start, end, recurrence, calendar);
     db.close();
     return rows;
 }
@@ -60,14 +60,14 @@ function deleteEvent(eventId) {
 }
 
 /**
- * Gets all events corresponding to a given label
+ * Gets all events corresponding to a given calendar
  * 
- * @param {Label} label the label to search by
- * @returns an array of all events matching the label, may be empty
+ * @param {Calendar} calendar the calendar to search by
+ * @returns an array of all events matching the calendar, may be empty
  */
-function getEventByLabel(label) {
+function getEventByCalendar(calendar) {
     const db = new Database(dbPath);
-    const events  = db.prepare(`SELECT * FROM Event WHERE LabelId = ? ORDER BY StartDate`).all(label.LabelId);
+    const events  = db.prepare(`SELECT * FROM Event WHERE CalendarId = ? ORDER BY StartDate`).all(calendar.CalendarId);
     db.close();
     return events.map(event => new Event(event));
 }
@@ -101,6 +101,6 @@ module.exports = {
     getEventById,
     createEvent,
     deleteEvent,
-    getEventByLabel,
+    getEventByCalendar,
     updateEvent
 }

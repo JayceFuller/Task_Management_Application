@@ -1,6 +1,7 @@
 const listForm = document.getElementById('list-form');
 const listMenu = document.getElementById('list-menu');
 const listDialog = document.getElementById('list-dialog');
+const listDialogHeader = listDialog.querySelector('.dialog-header');
 const listHeaderBar = listDialog.querySelector('.header-bar');
 
 let currentListId = null;
@@ -16,10 +17,12 @@ async function openListDialog(id = null) {
     const input = document.getElementById('list-name');
 
     if (id != null) {
+        listDialogHeader.textContent = `Edit_List.txt`;
         const list = /**@type { List }*/await window.electronAPI.getListById(id) || null;
         input.value = list.ListName;
     }
     else {
+        listDialogHeader.textContent = `New_List.txt`;
         input.value = '';
     }
 

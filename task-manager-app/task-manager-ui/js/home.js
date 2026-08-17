@@ -44,7 +44,7 @@ async function loadTasks() {
             li.className = "group-item";
             li.dataset.taskId = task.TaskId;
             li.innerHTML = `
-                <div class="task-container">
+                <div class="item-container">
                     <div class="summary">
                         <input type="checkbox" class="task-checkbox" title="Mark completed">
                         <span class="title">${ task.TaskName }</span>
