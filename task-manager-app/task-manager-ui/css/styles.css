@@ -64,9 +64,26 @@ button, input, textarea, select {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
 }
 
-/** Styles container border */
+/** Creates a standard, padding container */
+.container {
+    padding: 10px;
+}
+
+/** Remove all margins */
+.m0 {
+    margin: 0px;
+}
+
+/** Styles list containers */
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+/** Styles a bordered container with overflow y option */
 .border-container {
     border-style: solid;
     border-color: var(--text-color);
@@ -75,6 +92,11 @@ button, input, textarea, select {
     margin-top: 10px;
     margin-bottom: 10px;
     height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: var(--accent-color) black;
+    scrollbar-width: thin;
 }
 
 /** Styles warning border */
@@ -95,6 +117,7 @@ hr {
     opacity: 100%;
 }
 
+/** Styles heading 1 */
 h1 {
     margin: 0;
     font-size: 28px;
@@ -111,12 +134,12 @@ h2 {
 /** Styles heading 3 */
 h3 {
     margin: 0;
-    font-size: 18px;
     font-style: var(--font);
 }
 
-/** Styles heading 4 */
+/** Styles a subheader */
 .subheader {
+    margin-top: 10px;
     margin-left: 10px;
     font-size: 16px;
     font-style: var(--font);
@@ -128,23 +151,26 @@ h3 {
     justify-content: center;
 }
 
+/** Sets a row to display flex with a gap and centers content */
 .d-flex-row {
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
+/** Sets content to space between */
 .space-between {
     justify-content: space-between;
 }
 
+/** Removes the background of a button */
 .nobkg-button {
     float: right;
-    background: none;
+    background: transparent;
     color: var(--text-color);
 }
 
-/** Styles all buttons in the app */
+/** Styles all standard buttons in the app */
 .button {
     background-color: var(--accent-color);
     color: var(--accent-text-color);
@@ -156,7 +182,7 @@ h3 {
         color: var(--accent-text-color-hover);
     }
 
-/** Style close buttons */
+/** Style dialog close buttons */
 .close-button {
     background-color: var(--accent-color);
     color: var(--accent-text-color);
@@ -212,41 +238,78 @@ dialog {
 /** Style grouped <li> items */
 .group-item {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    line-height: 1.4;
 }
+    .group-item:hover {
+        background-color: rgba(255,255,255, 0.1);
+    }
 
-/** Add strike through to text */
-.strike-through {
-    text-decoration: line-through;
+/** Styles the vellip button for specific list items */
+.group-item .opt-btn {
+    display: none;
+    margin-left: auto;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    float: right;
+    font-size: 16px;
 }
-
-.group-item a {
-    text-decoration: none;
-    color: var(--text-color);
-}
-    .group-item a:hover {
-        color: var(--accent-color);
+    .group-item:hover .opt-btn {
+        display: inline-block;
+    }
+    .group-item .opt-btn:hover {
+        background-color: rgba(255,255,255, 0.3);
     }
 
 .group {
     min-width: 300px;
+    padding: 0 !important;
 }
 
 .all-groups {
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
     flex: row;
-    overflow: auto;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 10px;
     scrollbar-color: var(--accent-color) black;
     scrollbar-width: thin;
 }
 
-.m0 {
-    margin: 0px;
+.menu {
+    padding: 5px 0px;
+    list-style: none;
 }
 
-ul {
-    padding-left: 20px;
+/** Styles the vellip button for each grouping */
+.vellip-btn {
+    margin: 0;
+    border: none;
+    border-radius: 3px;
+    padding: 0px 6px;
+    font-size: 18px;
+}
+    .vellip-btn:hover {
+        background-color: rgba(255,255,255, 0.1);
+    }
+
+p {
+    margin: 0;
+    font-size: 14px;
+    font-style: var(--font);
+    color: black;
+}
+
+/** Add strike through to text */
+.strike-through {
+    text-decoration: line-through;
 }
 
 .menu {
@@ -277,4 +340,42 @@ ul {
     padding: 3px;
     height: 25px;
     justify-content: space-between;
+}
+
+.fake-btn {
+    border: 1px var(--accent-color) solid;
+    border-radius: 5px;
+    color: var(--accent-color);
+    width: fit-content;
+    padding: 3px 7px;
+    margin-left: 33px;
+}
+
+/** Styles the header to each task item */
+.summary {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+/** Styles the name of each task item */
+.title {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+/** Styles the container hold each individual task */
+.item-container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+    padding: 10px;
+}
+
+/** Styles the description of each task item */
+.sub-text {
+    margin-left: 35px;
+    margin-bottom: 5px;
+    color: var(--text-color);
 }

@@ -40,9 +40,11 @@ async function createLabelElement(label) {
     groupDiv.className = 'border-container group';
     groupDiv.dataset.labelId = label.LabelId; 
     groupDiv.innerHTML = `
-        <div class="d-flex-row space-between">
-            <h3>${ label.LabelName }</h3>
-            <button class="nobkg-button vellip-btn" title="Label options">⋮</button>
+        <div class="container">
+            <div class="d-flex-row space-between">
+                <h3>${ label.LabelName }</h3>
+                <button class="nobkg-button vellip-btn" title="Label options">⋮</button>
+            </div>
         </div>
 
         <ul class="event-list"></ul>
@@ -55,13 +57,14 @@ async function createLabelElement(label) {
         li.className = 'group-item';
         li.dataset.eventId = event.EventId;
         li.innerHTML = `
-            <div class="summary">
-                <span class="title" role="button" aria-expanded="false">${ event.EventName }</span>
-                <button class="opt-btn" title="Event options">⋮</button>
-            </div>
+            <div class="item-container">
+                <div class="summary">
+                    <span class="title">${ event.EventName }</span>
+                    <button class="opt-btn" title="Event options">⋮</button>
+                </div>
 
-            <div class="details">
-                <p>${ event.EventDesc }</p>
+                ${ event.EventDesc ? `<p class="sub-text">${ event.EventDesc }</p>` : '' }
+                <p class="fake-btn">&#128338; ${ formatDateTime(event.StartDate) } - ${ formatDateTime(event.EndDate) }</p>
             </div>
         `;
 

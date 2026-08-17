@@ -43,12 +43,14 @@ async function createListElement(list) {
     groupDiv.className = 'border-container group';
     groupDiv.dataset.listId = list.ListId; 
     groupDiv.innerHTML = `
-        <div class="d-flex-row space-between">
-            <h3>${ list.ListName }</h3>
-            <button class="nobkg-button vellip-btn" title="List options">⋮</button>
+        <div class="container">
+            <div class="d-flex-row space-between">
+                <h3>${ list.ListName }</h3>
+                <button class="nobkg-button vellip-btn" title="List options">⋮</button>
+            </div>
+            <button class="add-button">+ Add a task</button>
         </div>
-
-        <button class="add-button">+ Add a task</button>
+        
         <ul class="task-list"></ul>
 
         <details class="subheader">
@@ -65,23 +67,19 @@ async function createListElement(list) {
         li.className = 'group-item';
         li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-            <div class="summary">
-                <input type="checkbox" class="task-checkbox" title="Mark completed">
-                <span class="title" role="button" aria-expanded="false">${ task.TaskName }</span>
-                <button class="opt-btn" title="Task options">⋮</button>
-            </div>
+            <div class="item-container">
+                <div class="summary">
+                    <input type="checkbox" class="task-checkbox" title="Mark completed">
+                    <span class="title">${ task.TaskName }</span>
+                    <button class="opt-btn" title="Task options">⋮</button>
+                    <br/>
+                </div>
 
-            <div class="details">
-                <p>${ task.TaskDesc }</p>
+                ${ task.TaskDesc ? `<p class="sub-text">${ task.TaskDesc }</p>` : '' }
+                <p class="fake-btn">&#128338; ${ formatTime(task.DueDate) }</p>
             </div>
         `;
-
-        const title = li.querySelector('.title');
-        title.addEventListener('click', () => {
-            const isOpen = li.classList.toggle('is-open');
-            title.setAttribute('aria-expanded', isOpen.toString());
-        });
-
+        
         li.querySelector('.opt-btn').addEventListener('click', (e) => openTaskMenu(e, task.TaskId));
         li.querySelector('.task-checkbox').addEventListener('change', () => completeTask(task));
         taskList.appendChild(li);
@@ -90,11 +88,19 @@ async function createListElement(list) {
     const completedList = groupDiv.querySelector('.completed-tasks');
     completedArray.forEach(task => {
         const li = document.createElement('li');
-        li.className = 'group-item strike-through';
+        li.className = 'group-item';
         li.dataset.taskId = task.TaskId;
         li.innerHTML = `
-            <input type="checkbox" class="task-checkbox" title="Mark uncompleted" checked>
-            <a>${ task.TaskName }</a>
+            <div class="task-container">
+                <div class="summary">
+                    <input type="checkbox" class="task-checkbox" title="Mark incomplete" checked/>
+                    <span class="title strike-through">${ task.TaskName }</span>
+                    <button class="opt-btn" title="Task options">⋮</button>
+                    <br/>
+                </div>
+
+                ${task.TaskDesc ? `<p class="sub-text">${task.TaskDesc}</p>` : ''}
+            </div>
         `;
         li.querySelector('.task-checkbox').addEventListener('change', () => uncompleteTask(task));
         completedList.appendChild(li);
@@ -203,16 +209,6 @@ taskForm.addEventListener('submit', async (e) => {
         loadPage();
     }
 });
-
-/**
- * Request to swap a task's status to complete. If successful, reload the page
- */
-function completeTask(task) {
-    const success = window.electronAPI.completeTask(task.TaskId);
-    if (success) {
-        loadPage();
-    }
-}
 
 /**
  * Request to swap a task's status to incomplete. If successful, reload the page
